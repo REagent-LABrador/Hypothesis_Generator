@@ -616,7 +616,7 @@
   "$id": "https://labrador.dev/schemas/hypothesis.schema.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": true,
-  "description": "OUTPUT of hyp_gen, written as hypothesis.json (schema version 2.0). ONE hypothesis, with the provenance needed to judge it. Prose contract: src/hyp_gen/OUTPUT_SCHEMA.md",
+  "description": "OUTPUT of hyp_gen, written as hypothesis.json (schema version 2.0). ONE hypothesis, with the provenance needed to judge it. Prose contract: schemas/SCHEMA.md",
   "properties": {
     "asks": {
       "description": "Requests back to the graph builder that would move this hypothesis.",

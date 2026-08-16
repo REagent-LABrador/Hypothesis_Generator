@@ -1,4 +1,29 @@
-# OUTPUT — markdown
+# Report adapter — Input ⇄ Output Contract
+
+**This is the authoritative contract for this adapter.** The core's contract is
+[`schemas/SCHEMA.md`](../../schemas/SCHEMA.md); this file says only what this
+adapter adds on top of it.
+
+## Input — one or more `hypothesis.json`
+
+The report adapter turns hypothesis documents into markdown somebody reads.
+
+The input contract is the core's output contract, unchanged:
+[`schemas/SCHEMA.md`](../../schemas/SCHEMA.md).
+
+This adapter accepts **one or more** documents. The core emits one per run, so
+several means several runs; each document carries its own provenance, and
+`adapters.common.load()` refuses to bundle documents from different graphs —
+their scores are not comparable and a shared header would claim they are.
+
+`table` and `trace` mode are the ones that gain from several documents: one row each, and shared nodes drawn once.
+
+What this adapter may not do, like every adapter: read the knowledge graph,
+call a model, or state anything the documents do not carry.
+
+---
+
+## Output — markdown
 
 Markdown text, written to one file per mode. Not a data format: the audience is
 a person, and the only contract is what must never be dropped.

@@ -12,7 +12,7 @@ Two artifacts, one input:
                            the evidence says, nodes deduplicated so two
                            hypotheses crossing one node visibly converge.
 
-See INPUT_SCHEMA.md and OUTPUT_SCHEMA.md in this directory.
+See SCHEMA.md in this directory.
 """
 
 from adapters.webui.diagram import to_svg

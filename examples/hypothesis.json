@@ -1,0 +1,453 @@
+{
+  "schema_version": "2.0",
+  "provenance": {
+    "graph_id": "g_demo1",
+    "round": 2,
+    "question": "can an existing small molecule be repositioned against idiopathic pulmonary fibrosis?",
+    "generated_at": "2026-08-15T09:12:00Z",
+    "params": {
+      "stance": {
+        "profile": "repurposing",
+        "craziness": null
+      },
+      "framing": {
+        "mode": "open",
+        "anchors": [],
+        "targets": [],
+        "exclude": []
+      },
+      "traversal": {
+        "max_hops": 4,
+        "min_link_confidence": 0.2,
+        "allow_no_effect_edges": false,
+        "allow_negative_edges": false,
+        "allow_edge_reversal": true,
+        "reversal_penalty": 0.7,
+        "max_paths_per_pair": 2,
+        "max_branch_per_node": 12,
+        "seed_kinds": [
+          "small_molecule"
+        ],
+        "target_kinds": [
+          "disease"
+        ],
+        "intermediate_kinds": [
+          "protein",
+          "gene",
+          "process"
+        ],
+        "metapaths": [],
+        "predicates_allow": [],
+        "predicates_deny": [
+          "correlates_with",
+          "co_occurs_with"
+        ],
+        "hub_damping": 0.4,
+        "max_node_degree": 0,
+        "min_mentions": 0,
+        "min_dwpc": 0.0,
+        "max_candidates": 400
+      },
+      "motifs": {
+        "enabled": [
+          "transitive_chain",
+          "analogical_transfer",
+          "gap_closure"
+        ],
+        "weights": {
+          "gap_closure": 1.0,
+          "transitive_chain": 0.9,
+          "analogical_transfer": 0.7,
+          "condition_split": 0.85
+        },
+        "analogy_min_shared": 2,
+        "analogy_min_jaccard": 0.15,
+        "analogy_same_kind_only": true,
+        "condition_split_requires_where": true,
+        "require_unstated": true
+      },
+      "evidence": {
+        "study_weights": {
+          "meta_analysis": 1.0,
+          "clinical_trial": 0.95,
+          "human_cohort": 0.8,
+          "animal": 0.6,
+          "test_tube": 0.45,
+          "computational": 0.3,
+          "review": 0.25
+        },
+        "hedged_penalty": 0.75,
+        "secondhand_penalty": 0.6,
+        "preprint_penalty": 0.85,
+        "basis_penalty": {
+          "primary": 1.0,
+          "mixed": 0.9,
+          "hedged_only": 0.7,
+          "background_only": 0.5
+        },
+        "recency_half_life": 0.0,
+        "min_independent_groups": 1,
+        "single_group_cap": 0.6,
+        "support_weights": {
+          "evidence_quality": 0.4,
+          "agreement": 0.35,
+          "independence": 0.25
+        },
+        "chain_aggregation": "weakest",
+        "contradiction_weight": 1.0
+      },
+      "novelty": {
+        "hop_novelty": 0.22,
+        "gap_novelty_bonus": 0.25,
+        "searched_gap_bonus": 0.2,
+        "gap_confidence_cap": 0.6,
+        "popularity_penalty": 0.15,
+        "respect_absence_reliability": true
+      },
+      "selection": {
+        "top_k": 10,
+        "diversity_lambda": 0.7,
+        "similarity": "jaccard_nodes",
+        "max_per_subject": 2,
+        "max_per_object": 3,
+        "max_per_motif": 0,
+        "min_support": 0.0,
+        "min_novelty": 0.0,
+        "max_contradiction_risk": 1.0,
+        "require_pareto": false,
+        "rank_weights": {
+          "support": 0.35,
+          "novelty": 0.35,
+          "testability": 0.2,
+          "contradiction_risk": -0.1
+        },
+        "testable_kinds": [
+          "method",
+          "small_molecule",
+          "gene",
+          "protein"
+        ]
+      },
+      "ranking": {
+        "articulate": true,
+        "critique": true,
+        "max_claims_per_hypothesis": 6,
+        "critic_lenses": [
+          "mechanism",
+          "evidence",
+          "testability"
+        ],
+        "critics_per_hypothesis": 2,
+        "refute_threshold": 0.5,
+        "tournament": false,
+        "elo_initial": 1200.0,
+        "elo_k": 32.0,
+        "tournament_matches_per_hypothesis": 4,
+        "debate_turns": 2,
+        "evolution_rounds": 0,
+        "evolve_top_n": 3,
+        "evolve_operators": [
+          "specialise",
+          "combine",
+          "invert_condition"
+        ],
+        "effort_articulate": "high",
+        "effort_critique": "high"
+      },
+      "verification": {
+        "enabled": true,
+        "gates": [
+          "structure",
+          "citations",
+          "consistency",
+          "independence",
+          "falsifiability",
+          "adversarial"
+        ],
+        "halt_on": [
+          "structure",
+          "citations",
+          "independence"
+        ],
+        "require_primary_evidence": true,
+        "max_claim_overlap": 0.9,
+        "min_falsifier_chars": 25
+      },
+      "loop": {
+        "enabled": false,
+        "max_requests": 3,
+        "depth": "standard",
+        "test_gap_when_ranked_above": 3,
+        "resolve_link_below_confidence": 0.35,
+        "expand_node_min_mentions": 8,
+        "expand_node_max_degree": 2,
+        "stop_when_no_score_change": 0.02
+      },
+      "budget": {
+        "max_model_calls": 40,
+        "max_enumeration_seconds": 30.0,
+        "max_output_hypotheses": 12
+      }
+    },
+    "coverage": {
+      "depth": "deep",
+      "found": 318,
+      "read": 36,
+      "used": 33,
+      "truncated": true,
+      "no_quote_discarded": 4,
+      "limits": {
+        "max_papers": 50,
+        "max_queries": 6,
+        "hit_limit": "max_papers"
+      }
+    },
+    "counts": {
+      "things": 12,
+      "links": 15,
+      "findings": 17,
+      "gaps": 2,
+      "shortlisted": 4,
+      "blocked": 0,
+      "model_calls": 0,
+      "verification_verified": 0,
+      "verification_qualified": 4,
+      "verification_unverified": 0,
+      "verification_rejected": 0
+    },
+    "considered": 4
+  },
+  "hypothesis": {
+    "id": "H-analog-t1-t11-via-t2",
+    "motif": "analogical_transfer",
+    "subject": "t1",
+    "object": "t11",
+    "subject_name": "pirfenidone",
+    "object_name": "systemic sclerosis ILD",
+    "hops": 1,
+    "tags": [],
+    "path": [
+      {
+        "link": "L8",
+        "from": "t2",
+        "from_name": "nintedanib",
+        "how": "slows",
+        "to": "t11",
+        "to_name": "systemic sclerosis ILD",
+        "reversed": false,
+        "state": "single_source",
+        "support": 0.711
+      }
+    ],
+    "scores": {
+      "support": 0.711,
+      "novelty": 0.341,
+      "testability": 0.7,
+      "contradiction_risk": 0.0,
+      "structure": 1.0,
+      "absence_reliability": 0.408
+    },
+    "rank_score": 0.4607,
+    "evidence": {
+      "links": {
+        "L8": {
+          "from": "t2",
+          "to": "t11",
+          "from_name": "nintedanib",
+          "to_name": "systemic sclerosis ILD",
+          "how": "slows",
+          "state": "single_source",
+          "basis": "primary",
+          "why": null,
+          "yes": [
+            "f9"
+          ],
+          "no": [],
+          "no_effect": [],
+          "stated_confidence": 0.8,
+          "recomputed_support": 0.711,
+          "conditions": [
+            "phase 3 trial"
+          ]
+        }
+      },
+      "findings": {
+        "f9": {
+          "from": "t2",
+          "to": "t11",
+          "how": "slows",
+          "says": "yes",
+          "quote": "nintedanib reduced the annual rate of FVC decline in SSc-ILD",
+          "paper": "p9",
+          "where": "phase 3 trial",
+          "is_own_result": true,
+          "hedged": false,
+          "confidence": 0.95
+        }
+      },
+      "papers": {
+        "p9": {
+          "title": "Nintedanib slows decline in SSc-ILD",
+          "year": 2019,
+          "journal": "N Engl J Med",
+          "doi": "10.1056/x9",
+          "first_author": "Distler",
+          "study_type": "clinical_trial",
+          "is_preprint": false
+        }
+      },
+      "things": {
+        "t1": {
+          "name": "pirfenidone",
+          "kind": "small_molecule",
+          "aliases": [
+            "Esbriet"
+          ],
+          "mentions": 14
+        },
+        "t11": {
+          "name": "systemic sclerosis ILD",
+          "kind": "disease",
+          "aliases": [
+            "SSc-ILD"
+          ],
+          "mentions": 5
+        },
+        "t2": {
+          "name": "nintedanib",
+          "kind": "small_molecule",
+          "aliases": [
+            "BIBF 1120"
+          ],
+          "mentions": 12
+        },
+        "t3": {
+          "name": "TGF-beta1",
+          "kind": "protein",
+          "aliases": [
+            "TGFB1"
+          ],
+          "mentions": 19
+        },
+        "t4": {
+          "name": "myofibroblast differentiation",
+          "kind": "process",
+          "aliases": [],
+          "mentions": 15
+        }
+      },
+      "gap": {
+        "id": "g2",
+        "missing": [
+          "t1",
+          "t11"
+        ],
+        "implied_by": [
+          "L1",
+          "L8"
+        ],
+        "note": "pirfenidone is never linked to SSc-ILD despite the shared antifibrotic target",
+        "confidence": 0.31,
+        "searched_in_round": 2
+      },
+      "per_link_support": [
+        {
+          "link_id": "L8",
+          "evidence_quality": 0.902,
+          "agreement": 1.0,
+          "independence": 0.0,
+          "support": 0.711,
+          "stated_overall": 0.8,
+          "yes_count": 1,
+          "no_count": 0,
+          "groups": 1,
+          "capped": false,
+          "paper_ids": [
+            "p9"
+          ],
+          "conditions": [
+            "phase 3 trial"
+          ]
+        }
+      ],
+      "scoring_notes": [
+        "g2 was searched in round 2"
+      ]
+    },
+    "caveats": [
+      "The search is a sample, not the literature: 36 of 318 results were read (hit max_papers). Absence of a link is weak evidence of absence.",
+      "4 extracted claims were dropped for having no verbatim sentence, so the graph under-reports slightly.",
+      "Novelty here rests on a gap, but this graph is not entitled to strong absence claims. Treat 'nobody has shown X' as 'this search did not surface X'."
+    ],
+    "articulation": null,
+    "critiques": [],
+    "verdict": null,
+    "verification": {
+      "verdict": "qualified",
+      "gates": [
+        {
+          "name": "structure",
+          "status": "pass",
+          "summary": "1 hop(s), path intact, not already stated",
+          "issues": [],
+          "halting": true
+        },
+        {
+          "name": "citations",
+          "status": "skip",
+          "summary": "not articulated",
+          "issues": [],
+          "halting": true
+        },
+        {
+          "name": "consistency",
+          "status": "skip",
+          "summary": "not articulated",
+          "issues": [],
+          "halting": false
+        },
+        {
+          "name": "independence",
+          "status": "warn",
+          "summary": "all primary evidence here is from Distler; nothing replicates it",
+          "issues": [
+            {
+              "code": "single_group",
+              "detail": "all primary evidence here is from Distler; nothing replicates it",
+              "severity": "warning"
+            }
+          ],
+          "halting": true
+        },
+        {
+          "name": "falsifiability",
+          "status": "skip",
+          "summary": "not articulated",
+          "issues": [],
+          "halting": false
+        },
+        {
+          "name": "adversarial",
+          "status": "skip",
+          "summary": "not articulated",
+          "issues": [],
+          "halting": false
+        }
+      ],
+      "halted_at": null
+    },
+    "elo": null,
+    "evolved_from": null,
+    "evolution_operator": null,
+    "issues": [
+      {
+        "code": "single_group",
+        "detail": "all primary evidence here is from Distler; nothing replicates it",
+        "severity": "warning"
+      }
+    ],
+    "asks": [],
+    "provenance": "analogical_transfer over g_demo1@round2 via L8"
+  },
+  "asks": []
+}

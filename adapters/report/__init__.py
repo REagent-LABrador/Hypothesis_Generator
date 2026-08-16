@@ -8,8 +8,8 @@ one hypothesis:
     trace            where did this come from
     full             is the work correct
 
-``to_markdown(bundle, mode=...)`` is the whole surface. See INPUT_SCHEMA.md and
-OUTPUT_SCHEMA.md in this directory.
+``to_markdown(bundle, mode=...)`` is the whole surface. See SCHEMA.md in this
+directory.
 """
 
 from adapters.report.render import FILENAMES, MODE_NAMES, to_markdown

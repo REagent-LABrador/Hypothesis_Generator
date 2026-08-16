@@ -8,8 +8,11 @@ The core flow, and nothing else:
 
 Two contracts bound it, both documented in this directory:
 
-    graph.py       INPUT  — the knowledge graph accepted.  INPUT_SCHEMA.md
-    hypothesis.py  OUTPUT — one ``HypothesisDocument``.    OUTPUT_SCHEMA.md
+    graph.py       INPUT  — the knowledge graph accepted
+    hypothesis.py  OUTPUT — one ``HypothesisDocument``
+
+Both are specified, with annotated JSON and a worked example, in
+``schemas/SCHEMA.md`` — the authoritative contract for this package.
 
 A run produces exactly one hypothesis: the one that ranked first. Many are
 enumerated, scored and ranked on the way there, because that is how the winner

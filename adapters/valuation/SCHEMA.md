@@ -1,4 +1,29 @@
-# OUTPUT — program briefs for the ROI model
+# Valuation adapter — Input ⇄ Output Contract
+
+**This is the authoritative contract for this adapter.** The core's contract is
+[`schemas/SCHEMA.md`](../../schemas/SCHEMA.md); this file says only what this
+adapter adds on top of it.
+
+## Input — one or more `hypothesis.json`
+
+The valuation adapter turns hypothesis documents into program briefs for the ROI model.
+
+The input contract is the core's output contract, unchanged:
+[`schemas/SCHEMA.md`](../../schemas/SCHEMA.md).
+
+This adapter accepts **one or more** documents. The core emits one per run, so
+several means several runs; each document carries its own provenance, and
+`adapters.common.load()` refuses to bundle documents from different graphs —
+their scores are not comparable and a shared header would claim they are.
+
+It also requires a **`ProgramFrame`** -- the analyst's half of the input, which no graph can supply. Its fields are tabled below the output.
+
+What this adapter may not do, like every adapter: read the knowledge graph,
+call a model, or state anything the documents do not carry.
+
+---
+
+## Output — program briefs for the ROI model
 
 One `*.program.json` per molecule, plus a record of what was skipped and why.
 

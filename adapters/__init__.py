@@ -10,7 +10,7 @@ reads that file and never touches the graph.
     adapters/webui/      hypothesis.json -> cards.json + traces.svg
     adapters/valuation/  hypothesis.json -> *.program.json for the ROI model
 
-Each directory carries its own INPUT_SCHEMA.md and OUTPUT_SCHEMA.md. The shared
+Each directory carries its own SCHEMA.md, covering both sides. The shared
 rules, and the four helpers that keep a failure looking like a failure in every
 rendering, are in ``adapters/common.py``.
 

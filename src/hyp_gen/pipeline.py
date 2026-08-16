@@ -49,7 +49,7 @@ class RunResult(BaseModel):
     """INTERNAL. Everything one run assembled, before the boundary narrows it.
 
     Not a contract and not written to disk. The app's output is one
-    ``HypothesisDocument`` -- see ``hyp_gen/OUTPUT_SCHEMA.md`` -- and this is
+    ``HypothesisDocument`` -- see ``schemas/SCHEMA.md`` -- and this is
     the set-shaped working state that has to exist for the winner to be
     knowable: you cannot rank without candidates to rank, and the tournament
     compares hypotheses against each other by construction.

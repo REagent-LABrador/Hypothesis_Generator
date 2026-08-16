@@ -41,14 +41,72 @@ def test_every_committed_schema_matches_the_code():
     )
 
 
-def test_the_core_and_every_adapter_document_both_sides():
-    """A directory that produces an artifact has to say what it consumes and emits."""
-    owners = [ROOT / "src" / "hyp_gen", *(ROOT / "adapters").glob("*/")]
-    for owner in owners:
-        if owner.name.startswith("_") or owner.name.startswith("."):
+SCHEMA = ROOT / "schemas" / "SCHEMA.md"
+
+
+def test_the_core_and_every_adapter_have_one_contract_each():
+    """Anything that produces an artifact says what it consumes and what it emits."""
+    assert SCHEMA.exists(), "the core contract is schemas/SCHEMA.md"
+    for adapter in sorted((ROOT / "adapters").glob("*/")):
+        if adapter.name.startswith((".", "_")):
             continue
-        for side in ("INPUT_SCHEMA.md", "OUTPUT_SCHEMA.md"):
-            assert (owner / side).exists(), f"{owner.name} has no {side}"
+        assert (adapter / "SCHEMA.md").exists(), f"{adapter.name} has no SCHEMA.md"
+
+
+def _fields(model, seen=None) -> set[str]:
+    """Every field name in a model and everything it nests."""
+    from pydantic import BaseModel
+
+    seen = seen if seen is not None else set()
+    names: set[str] = set()
+    for name, field in model.model_fields.items():
+        names.add(field.alias or name)
+        for arg in (field.annotation, *getattr(field.annotation, "__args__", ())):
+            for inner in (arg, *getattr(arg, "__args__", ())):
+                if (
+                    isinstance(inner, type)
+                    and issubclass(inner, BaseModel)
+                    and inner not in seen
+                ):
+                    seen.add(inner)
+                    names |= _fields(inner, seen)
+    return names
+
+
+def test_the_contract_documents_every_field_of_both_models():
+    """SCHEMA.md is written by hand, so this is what stops it falling behind.
+
+    A generated field table cannot say what `searched_in_round: null` means or
+    why `path` holds the donor's edge, which is why the core's contract is
+    authored -- but a human forgets to add the field they just shipped, and a
+    contract missing a field is worse than one that never mentioned it.
+    """
+    documented = SCHEMA.read_text()
+    missing = sorted(
+        name
+        for name in _fields(KnowledgeGraph) | _fields(HypothesisDocument)
+        if f"\"{name}\"" not in documented and f"`{name}`" not in documented
+    )
+    assert not missing, (
+        f"schemas/SCHEMA.md does not mention: {missing}. A field a consumer will "
+        "see in the JSON has to appear in the contract that describes it."
+    )
+
+
+def test_the_worked_example_is_a_real_current_run():
+    """The example in SCHEMA.md is copied from this file, so it must not go stale."""
+    committed = json.loads((ROOT / "examples" / "hypothesis.json").read_text())
+    HypothesisDocument.model_validate(committed)
+
+    fresh = Generator(
+        KnowledgeGraph.load(GRAPH), Params.profile("repurposing")
+    ).run().top()
+    assert fresh.hypothesis.id == committed["hypothesis"]["id"], (
+        "examples/hypothesis.json no longer matches what the code produces -- "
+        "rerun `hypgen --graph examples/knowledge-graph.json --profile repurposing "
+        "--dry-run --out examples/` and update the worked example in SCHEMA.md"
+    )
+    assert fresh.provenance.considered == committed["provenance"]["considered"]
 
 
 def test_the_example_graph_satisfies_the_input_schema():

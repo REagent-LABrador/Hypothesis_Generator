@@ -1,15 +1,15 @@
-"""OUTPUT CONTRACT. ``RunResult`` is what this app produces.
+"""OUTPUT CONTRACT. ``HypothesisDocument`` is what this app produces.
 
-One run writes exactly one of these, as ``hypotheses.json``. It is the
-canonical artifact: the report, the SVG trace, the UI cards and the valuation
-export are all pure functions of it, so any of them can be regenerated from a
-saved copy without re-running the pipeline, and none of them can state anything
-this record does not carry.
+One run writes exactly one of these, as ``hypothesis.json``: a single
+hypothesis -- the one that ranked first -- with the provenance needed to judge
+it. Not a slate. ``RunResult`` in ``pipeline.py`` is the set-shaped working
+state behind it, and it never reaches disk.
 
-The JSON Schema in ``schemas/hypotheses.schema.json`` is generated from the
-models here -- ``python tools/generate_schemas.py`` rewrites it, and
-``tests/test_contracts.py`` fails if it drifts. Consumers should read that file
-rather than this module.
+``schemas/SCHEMA.md`` is the authoritative contract -- annotated JSON, the
+closed vocabularies, and a worked example from a real run. Consumers should read
+that rather than this module; ``schemas/hypothesis.schema.json`` is the same
+thing for a validator, generated from the models here by
+``python tools/generate_schemas.py``.
 
 Every claim carries its own citations, so a consumer (dataset support, ROI,
 simulated preclinical) can attach to a single claim rather than to a whole
@@ -17,8 +17,8 @@ hypothesis. That granularity is the point: "the target is druggable" and "the
 target matters in this disease" fail for different reasons and cost different
 amounts to check.
 
-The set is versioned by ``schema_version``. Adding an optional field is a minor
-bump; removing a field, or narrowing what one may contain, is a major one.
+The document is versioned by ``schema_version``. Adding an optional field is a
+minor bump; removing a field, or narrowing what one may contain, is a major one.
 """
 
 from __future__ import annotations

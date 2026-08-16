@@ -12,7 +12,7 @@ Expect NOT_DECISION_GRADE. A literature graph has no epidemiology, no payer
 behaviour and no price, so the emitted program is honestly full of holes and
 the ROI model's job is to name them. That gap list is the deliverable.
 
-See INPUT_SCHEMA.md and OUTPUT_SCHEMA.md in this directory.
+See SCHEMA.md in this directory.
 """
 
 from adapters.valuation.program import Emission, ProgramFrame, emit, program_input

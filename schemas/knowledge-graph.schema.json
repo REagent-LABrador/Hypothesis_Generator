@@ -499,7 +499,7 @@
   "$id": "https://labrador.dev/schemas/knowledge-graph.schema.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": true,
-  "description": "INPUT to hyp_gen. A literature knowledge graph. Prose contract: src/hyp_gen/INPUT_SCHEMA.md",
+  "description": "INPUT to hyp_gen. A literature knowledge graph. Prose contract: schemas/SCHEMA.md",
   "properties": {
     "coverage": {
       "$ref": "#/$defs/Coverage"

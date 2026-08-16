@@ -1,0 +1,10 @@
+{
+  "source_repository": "https://github.com/REagent-LABrador/rnpv-roi-calculator",
+  "source_commit": "29bf59ea5f64e0f68a58a2e35595f471b0c73311",
+  "files": {
+    "contracts/roi-input.schema.json": {
+      "source_path": "schemas/input.schema.json",
+      "sha256": "af17b7ca0f1e5c3bd189d06808a5a82af0cfc20b607e427add45a6b6fd25670c"
+    }
+  }
+}

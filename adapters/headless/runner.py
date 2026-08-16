@@ -7,6 +7,7 @@ between them.
 
 from __future__ import annotations
 
+import hashlib
 import re
 from collections.abc import Callable
 from typing import Any, Literal
@@ -14,10 +15,12 @@ from typing import Any, Literal
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator
 
 from adapters.common import Bundle
-from adapters.valuation.program import ProgramFrame, emit as emit_valuation
-from adapters.webui.payload import WebPayload, emit as emit_cards
+from adapters.valuation.program import ProgramFrame, focused_program_input
+from adapters.valuation.program import emit as emit_valuation
+from adapters.webui.payload import WebPayload
+from adapters.webui.payload import emit as emit_cards
 from hyp_gen.graph import KnowledgeGraph
-from hyp_gen.hypothesis import HypothesisDocument
+from hyp_gen.hypothesis import Ask, HypothesisDocument
 from hyp_gen.params import PROFILES, Params
 from hyp_gen.pipeline import Generator
 from hyp_gen.reasoning.llm import Judge
@@ -88,6 +91,70 @@ class HeadlessResponse(BaseModel):
 
 def _origin(mode: ExecutionMode) -> OutputOrigin:
     return "LIVE_PROVIDER" if mode == "LIVE" else "DETERMINISTIC_REPLAY"
+
+
+def _focused_hypothesis_id(
+    base_id: str,
+    *,
+    graph_id: str,
+    focus_thing_id: str,
+) -> str:
+    """Give one focused invocation a readable, collision-resistant identity."""
+
+    slug = re.sub(r"[^A-Za-z0-9._-]+", "-", focus_thing_id).strip("-._") or "thing"
+    scope = hashlib.sha256(f"{graph_id}\0{focus_thing_id}".encode()).hexdigest()[:12]
+    return f"{base_id}--focus-{slug}-{scope}"
+
+
+def _retarget_ask(ask: Ask, *, old_id: str, new_id: str) -> Ask:
+    if ask.for_hypothesis != old_id:
+        return ask.model_copy(deep=True)
+    return ask.model_copy(deep=True, update={"for_hypothesis": new_id})
+
+
+def _scope_document(
+    document: HypothesisDocument,
+    *,
+    focus_thing_id: str,
+) -> HypothesisDocument:
+    """Retarget every producer-owned reference to this focused invocation."""
+
+    old_id = document.hypothesis.id
+    new_id = _focused_hypothesis_id(
+        old_id,
+        graph_id=document.provenance.graph_id,
+        focus_thing_id=focus_thing_id,
+    )
+    hypothesis = document.hypothesis.model_copy(
+        deep=True,
+        update={
+            "id": new_id,
+            "asks": [
+                _retarget_ask(ask, old_id=old_id, new_id=new_id)
+                for ask in document.hypothesis.asks
+            ],
+        },
+    )
+    params = dict(document.provenance.params)
+    params["focused_identity"] = {
+        "base_hypothesis_id": old_id,
+        "focus_thing_id": focus_thing_id,
+    }
+    provenance = document.provenance.model_copy(
+        deep=True,
+        update={"params": params},
+    )
+    return document.model_copy(
+        deep=True,
+        update={
+            "provenance": provenance,
+            "hypothesis": hypothesis,
+            "asks": [
+                _retarget_ask(ask, old_id=old_id, new_id=new_id)
+                for ask in document.asks
+            ],
+        },
+    )
 
 
 def _terminal(
@@ -178,6 +245,10 @@ def run(
             ),
         )
 
+    document = _scope_document(
+        document,
+        focus_thing_id=request.focus_thing_id,
+    )
     bundle = Bundle.of([document])
     cards = emit_cards(bundle)
     try:
@@ -190,23 +261,35 @@ def run(
             hypothesis=document,
             cards=cards,
         )
-    if len(valuation.programs) != 1:
-        detail = "; ".join(
-            f"{item.hypothesis_id}: {item.reason}" for item in valuation.skipped
-        ) or "the focused hypothesis is not an intervention-to-disease program"
-        return _terminal(
-            mode,
-            "ROI_PROGRAM_NOT_EMITTED",
-            detail,
-            hypothesis=document,
-            cards=cards,
-        )
+    if len(valuation.programs) == 1:
+        program = valuation.programs[0]
+    else:
+        try:
+            program = focused_program_input(
+                document.hypothesis,
+                bundle,
+                request.valuation_frame,
+            )
+        except ValueError as error:
+            detail = "; ".join(
+                f"{item.hypothesis_id}: {item.reason}" for item in valuation.skipped
+            )
+            message = str(error)
+            if detail:
+                message = f"{message}; native valuation adapter: {detail}"
+            return _terminal(
+                mode,
+                "ROI_FRAME_INCOMPLETE",
+                message,
+                hypothesis=document,
+                cards=cards,
+            )
 
     roi_request = {
         "contract_version": "1.0.0",
         "module": "rnpv_roi_calculator",
         "request_id": request.roi.request_id,
-        "program": valuation.programs[0],
+        "program": program,
         "comparables": request.roi.comparables,
         "execution": request.roi.execution.model_dump(mode="json"),
     }

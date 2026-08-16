@@ -102,6 +102,22 @@ A view changes the form, never the safety: failure badges, halted
 verifications, error-level validation issues and the absence-of-evidence notice
 render in all of them.
 
+`cards.json` additionally carries a **required top-level `interpretability`
+block** — the shared LABrador contract (v1.0.0) that lets one UI ask the same
+six questions of any module's result: what was concluded, why, on which
+evidence and assumptions, how each number was derived, what uncertainty
+remains, and what would change it. It is a pure mapping of the winning
+hypothesis built by `adapters/interpretability.py`: every value is copied from
+the document, every scoring constant the rank used (including the default
+structure weight and the motif prior) is emitted so the rank score
+reconstructs exactly, unknowns stay `null` with a named limitation, and all
+scores are labeled heuristics, never probabilities. Machine-readable form:
+[`schemas/interpretability.schema.json`](schemas/interpretability.schema.json)
+and [`schemas/cards.schema.json`](schemas/cards.schema.json); prose contract in
+[`adapters/webui/SCHEMA.md`](adapters/webui/SCHEMA.md). Module-specific detail
+(`run_mode`, the graph path with reversed-edge markers, the verification gate
+table, the ranked candidate ledger) lives in `interpretability.extensions`.
+
 ## Driving it with an agent
 
 [`agent/`](agent/) is what a model needs to run this well:
@@ -142,7 +158,8 @@ src/hyp_gen/               THE CORE
   checks/        what the model said, evaluated back against the graph
 
 adapters/                  EVERYTHING DERIVED FROM A HYPOTHESIS
-  common.py      the rules every adapter obeys, and the loader
+  common.py            the rules every adapter obeys, and the loader
+  interpretability.py  the shared LABrador interpretability contract v1.0.0
   report/        markdown, four modes        + SCHEMA.md
   webui/         card payload and SVG trace  + SCHEMA.md
   valuation/     briefs for the ROI model    + SCHEMA.md

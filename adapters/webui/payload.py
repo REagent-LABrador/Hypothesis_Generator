@@ -44,6 +44,7 @@ from pydantic import BaseModel, ConfigDict, Field
 # Shared with the report on purpose: what counts as a failure, how a halt is
 # worded, and how prose is clipped must not fork between views.
 from adapters.common import Bundle, _clip, _failure_badges, _flags, _halt_note
+from adapters.interpretability import Interpretability, build as build_interpretability
 from hyp_gen.hypothesis import Hypothesis
 
 SCHEMA_VERSION = "1.0"
@@ -131,6 +132,14 @@ class WebPayload(BaseModel):
         description="Bundle-level facts every card must be read next to.",
     )
     hypotheses: list[Card]
+    interpretability: Interpretability = Field(
+        description=(
+            "The shared LABrador interpretability contract for the bundle's "
+            "winning hypothesis. Required: a payload without it does not "
+            "validate. See adapters/interpretability.py and "
+            "schemas/interpretability.schema.json."
+        ),
+    )
 
 
 def trace(hypothesis: Hypothesis) -> str:
@@ -383,4 +392,5 @@ def emit(record: Bundle) -> WebPayload:
         coverage=dict(cov),
         warnings=warnings,
         hypotheses=[_card(h, shared) for h in record.hypotheses],
+        interpretability=build_interpretability(record),
     )

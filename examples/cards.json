@@ -1,0 +1,746 @@
+{
+  "schema_version": "1.0",
+  "graph_id": "g_demo1",
+  "round": 2,
+  "question": "can an existing small molecule be repositioned against idiopathic pulmonary fibrosis?",
+  "generated_at": "2026-08-15T09:12:00Z",
+  "coverage": {
+    "depth": "deep",
+    "found": 318,
+    "read": 36,
+    "used": 33,
+    "truncated": true,
+    "no_quote_discarded": 4,
+    "limits": {
+      "max_papers": 50,
+      "max_queries": 6,
+      "hit_limit": "max_papers"
+    }
+  },
+  "warnings": [
+    "Absence of a link is not evidence of absence: this search read 36 of 318 results. Novelty is discounted for that."
+  ],
+  "hypotheses": [
+    {
+      "id": "H-analog-t1-t11-via-t2",
+      "headline": "pirfenidone → systemic sclerosis ILD",
+      "statement": null,
+      "trace": "pirfenidone --slows--> systemic sclerosis ILD",
+      "motif": "analogical_transfer",
+      "hops": 1,
+      "metrics": {
+        "support": 0.711,
+        "novelty": 0.341,
+        "testability": 0.7,
+        "rank": 0.4607
+      },
+      "status": {
+        "verification": "qualified",
+        "critics": null,
+        "flags": []
+      },
+      "highlights": [
+        {
+          "kind": "caution",
+          "text": "independence gate: all primary evidence here is from Distler; nothing replicates it",
+          "refs": []
+        },
+        {
+          "kind": "caution",
+          "text": "g2 was searched in round 2",
+          "refs": []
+        },
+        {
+          "kind": "caution",
+          "text": "The search is a sample, not the literature: 36 of 318 results were read (hit max_papers). Absence of a link is weak evidence of absence.",
+          "refs": []
+        },
+        {
+          "kind": "caution",
+          "text": "4 extracted claims were dropped for having no verbatim sentence, so the graph under-reports slightly.",
+          "refs": []
+        },
+        {
+          "kind": "caution",
+          "text": "Novelty here rests on a gap, but this graph is not entitled to strong absence claims. Treat 'nobody has shown X' as 'this search did not surface X'.",
+          "refs": []
+        },
+        {
+          "kind": "caution",
+          "text": "L8 recomputes to 0.71, 0.09 below the graph's stated 0.80.",
+          "refs": [
+            "L8"
+          ]
+        },
+        {
+          "kind": "novelty",
+          "text": "Unstated in the graph (g2): pirfenidone is never linked to SSc-ILD despite the shared antifibrotic target.",
+          "refs": [
+            "g2"
+          ]
+        },
+        {
+          "kind": "support",
+          "text": "One source only for 'nintedanib slows systemic sclerosis ILD': f9.",
+          "refs": [
+            "L8",
+            "f9"
+          ]
+        }
+      ]
+    }
+  ],
+  "interpretability": {
+    "schema_version": "1.0.0",
+    "headline": {
+      "title": "pirfenidone → systemic sclerosis ILD",
+      "result": "H-analog-t1-t11-via-t2",
+      "plain_language": "Structural candidate (analogical_transfer): the graph pattern proposes an unstated relation between pirfenidone and systemic sclerosis ILD; no model has articulated it yet.",
+      "status": "QUALIFIED",
+      "basis": [
+        "OBSERVED",
+        "INFERRED"
+      ]
+    },
+    "metrics": [
+      {
+        "id": "metric.support",
+        "label": "Evidence support",
+        "value": 0.711,
+        "unit": "score",
+        "display": "0.711",
+        "meaning": "How well the recorded findings back every link of the chain, recomputed from study type, hedging and independent groups. Heuristic score on 0..1, not a probability.",
+        "direction": "positive",
+        "evidence_ids": [
+          "evidence.f9"
+        ],
+        "assumption_ids": [
+          "assumption.support_weight.evidence_quality",
+          "assumption.support_weight.agreement",
+          "assumption.support_weight.independence",
+          "assumption.chain_aggregation",
+          "assumption.single_group_cap",
+          "assumption.min_independent_groups"
+        ]
+      },
+      {
+        "id": "metric.novelty",
+        "label": "Novelty",
+        "value": 0.341,
+        "unit": "score",
+        "display": "0.341",
+        "meaning": "Distance from what the graph already states, discounted by how entitled this search is to claim absence. Heuristic score on 0..1, not a probability.",
+        "direction": "positive",
+        "evidence_ids": [],
+        "assumption_ids": [
+          "assumption.novelty.hop_novelty",
+          "assumption.novelty.gap_novelty_bonus",
+          "assumption.novelty.searched_gap_bonus",
+          "assumption.novelty.gap_confidence_cap",
+          "assumption.novelty.popularity_penalty"
+        ]
+      },
+      {
+        "id": "metric.testability",
+        "label": "Testability",
+        "value": 0.7,
+        "unit": "score",
+        "display": "0.700",
+        "meaning": "Whether the chain touches kinds an experiment can manipulate. Heuristic score on 0..1, not a probability.",
+        "direction": "positive",
+        "evidence_ids": [],
+        "assumption_ids": [
+          "assumption.testable_kinds"
+        ]
+      },
+      {
+        "id": "metric.contradiction_risk",
+        "label": "Contradiction risk",
+        "value": 0.0,
+        "unit": "score",
+        "display": "0.000",
+        "meaning": "Share of links with counter-findings or weak bases. Heuristic score on 0..1, not a probability.",
+        "direction": "negative",
+        "evidence_ids": [],
+        "assumption_ids": [
+          "assumption.contradiction_weight"
+        ]
+      },
+      {
+        "id": "metric.structure",
+        "label": "Structural strength",
+        "value": 1.0,
+        "unit": "score",
+        "display": "1.000",
+        "meaning": "Degree-weighted path strength relative to the run's strongest candidate. Heuristic score on 0..1, not a probability.",
+        "direction": "positive",
+        "evidence_ids": [],
+        "assumption_ids": []
+      },
+      {
+        "id": "metric.absence_reliability",
+        "label": "Absence reliability",
+        "value": 0.408,
+        "unit": "score",
+        "display": "0.408",
+        "meaning": "How entitled this graph is to claim a link is absent, from coverage depth and truncation. Heuristic score on 0..1, not a probability.",
+        "direction": "neutral",
+        "evidence_ids": [],
+        "assumption_ids": []
+      },
+      {
+        "id": "metric.rank_score",
+        "label": "Rank score",
+        "value": 0.4607,
+        "unit": "score",
+        "display": "0.4607",
+        "meaning": "Orders candidates on a page; it does not grade the science. Weighted sum of the axis scores times the motif prior. Heuristic score on 0..1, not a probability.",
+        "direction": "neutral",
+        "evidence_ids": [],
+        "assumption_ids": [
+          "assumption.rank_weight.support",
+          "assumption.rank_weight.novelty",
+          "assumption.rank_weight.testability",
+          "assumption.rank_weight.contradiction_risk",
+          "assumption.rank_weight.structure",
+          "assumption.motif_prior"
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "id": "step.link_support.L8",
+        "label": "Recompute support for link L8",
+        "method": "weighted evidence recomputation",
+        "formula": "support = w_evidence_quality*evidence_quality + w_agreement*agreement + w_independence*independence; capped at single_group_cap while groups < min_independent_groups. Components are recorded rounded to 3 decimals.",
+        "inputs": [
+          {
+            "path": "per_link_support.L8.evidence_quality",
+            "value": 0.902,
+            "unit": "score"
+          },
+          {
+            "path": "per_link_support.L8.agreement",
+            "value": 1.0,
+            "unit": "score"
+          },
+          {
+            "path": "per_link_support.L8.independence",
+            "value": 0.0,
+            "unit": "score"
+          },
+          {
+            "path": "provenance.params.evidence.support_weights.evidence_quality",
+            "value": 0.4,
+            "unit": "weight"
+          },
+          {
+            "path": "provenance.params.evidence.support_weights.agreement",
+            "value": 0.35,
+            "unit": "weight"
+          },
+          {
+            "path": "provenance.params.evidence.support_weights.independence",
+            "value": 0.25,
+            "unit": "weight"
+          },
+          {
+            "path": "per_link_support.L8.groups",
+            "value": 1,
+            "unit": "groups"
+          },
+          {
+            "path": "provenance.params.evidence.single_group_cap",
+            "value": 0.6,
+            "unit": "score"
+          }
+        ],
+        "result": {
+          "value": 0.711,
+          "unit": "score"
+        },
+        "evidence_ids": [
+          "evidence.f9"
+        ],
+        "assumption_ids": [
+          "assumption.support_weight.evidence_quality",
+          "assumption.support_weight.agreement",
+          "assumption.support_weight.independence",
+          "assumption.chain_aggregation",
+          "assumption.single_group_cap",
+          "assumption.min_independent_groups"
+        ]
+      },
+      {
+        "id": "step.chain_support",
+        "label": "Aggregate per-link support over the chain",
+        "method": "chain aggregation (weakest)",
+        "formula": "support = min(per-link support)",
+        "inputs": [
+          {
+            "path": "per_link_support.L8.support",
+            "value": 0.711,
+            "unit": "score"
+          }
+        ],
+        "result": {
+          "value": 0.711,
+          "unit": "score"
+        },
+        "evidence_ids": [
+          "evidence.f9"
+        ],
+        "assumption_ids": [
+          "assumption.chain_aggregation"
+        ]
+      },
+      {
+        "id": "step.rank_score",
+        "label": "Combine the axes into the display rank",
+        "method": "weighted sum with motif prior",
+        "formula": "rank_score = round((w_support*support + w_novelty*novelty + w_testability*testability + w_contradiction_risk*contradiction_risk + w_structure*structure) * motif_prior, 4)",
+        "inputs": [
+          {
+            "path": "hypothesis.scores.support",
+            "value": 0.711,
+            "unit": "score"
+          },
+          {
+            "path": "hypothesis.scores.novelty",
+            "value": 0.341,
+            "unit": "score"
+          },
+          {
+            "path": "hypothesis.scores.testability",
+            "value": 0.7,
+            "unit": "score"
+          },
+          {
+            "path": "hypothesis.scores.contradiction_risk",
+            "value": 0.0,
+            "unit": "score"
+          },
+          {
+            "path": "hypothesis.scores.structure",
+            "value": 1.0,
+            "unit": "score"
+          },
+          {
+            "path": "provenance.params.selection.rank_weights.support",
+            "value": 0.35,
+            "unit": "weight"
+          },
+          {
+            "path": "provenance.params.selection.rank_weights.novelty",
+            "value": 0.35,
+            "unit": "weight"
+          },
+          {
+            "path": "provenance.params.selection.rank_weights.testability",
+            "value": 0.2,
+            "unit": "weight"
+          },
+          {
+            "path": "provenance.params.selection.rank_weights.contradiction_risk",
+            "value": -0.1,
+            "unit": "weight"
+          },
+          {
+            "path": "provenance.params.selection.rank_weights.structure",
+            "value": 0.15,
+            "unit": "weight"
+          },
+          {
+            "path": "provenance.params.motifs.weights.analogical_transfer",
+            "value": 0.7,
+            "unit": "weight"
+          }
+        ],
+        "result": {
+          "value": 0.4607,
+          "unit": "score"
+        },
+        "evidence_ids": [],
+        "assumption_ids": [
+          "assumption.rank_weight.support",
+          "assumption.rank_weight.novelty",
+          "assumption.rank_weight.testability",
+          "assumption.rank_weight.contradiction_risk",
+          "assumption.rank_weight.structure",
+          "assumption.motif_prior"
+        ]
+      }
+    ],
+    "evidence": [
+      {
+        "id": "evidence.f9",
+        "claim": "nintedanib slows systemic sclerosis ILD",
+        "source_type": "publication",
+        "source_id": "doi:10.1056/x9",
+        "source_url": "https://doi.org/10.1056/x9",
+        "locator": null,
+        "quote": "nintedanib reduced the annual rate of FVC decline in SSc-ILD",
+        "grade": "MODERATE",
+        "synthetic": false
+      }
+    ],
+    "assumptions": [
+      {
+        "id": "assumption.rank_weight.support",
+        "path": "provenance.params.selection.rank_weights.support",
+        "value": 0.35,
+        "unit": "weight",
+        "basis": "Resolved run parameter (profile 'repurposing'); configured, not measured.",
+        "synthetic": false
+      },
+      {
+        "id": "assumption.rank_weight.novelty",
+        "path": "provenance.params.selection.rank_weights.novelty",
+        "value": 0.35,
+        "unit": "weight",
+        "basis": "Resolved run parameter (profile 'repurposing'); configured, not measured.",
+        "synthetic": false
+      },
+      {
+        "id": "assumption.rank_weight.testability",
+        "path": "provenance.params.selection.rank_weights.testability",
+        "value": 0.2,
+        "unit": "weight",
+        "basis": "Resolved run parameter (profile 'repurposing'); configured, not measured.",
+        "synthetic": false
+      },
+      {
+        "id": "assumption.rank_weight.contradiction_risk",
+        "path": "provenance.params.selection.rank_weights.contradiction_risk",
+        "value": -0.1,
+        "unit": "weight",
+        "basis": "Resolved run parameter (profile 'repurposing'); configured, not measured.",
+        "synthetic": false
+      },
+      {
+        "id": "assumption.rank_weight.structure",
+        "path": "provenance.params.selection.rank_weights.structure",
+        "value": 0.15,
+        "unit": "weight",
+        "basis": "Default structure weight the scorer applies when selection.rank_weights omits it (generate/scoring.py).",
+        "synthetic": false
+      },
+      {
+        "id": "assumption.motif_prior",
+        "path": "provenance.params.motifs.weights.analogical_transfer",
+        "value": 0.7,
+        "unit": "weight",
+        "basis": "Motif prior for analogical_transfer: multiplies the weighted axis sum. Resolved run parameter (profile 'repurposing'); configured, not measured.",
+        "synthetic": false
+      },
+      {
+        "id": "assumption.support_weight.evidence_quality",
+        "path": "provenance.params.evidence.support_weights.evidence_quality",
+        "value": 0.4,
+        "unit": "weight",
+        "basis": "Resolved run parameter (profile 'repurposing'); configured, not measured.",
+        "synthetic": false
+      },
+      {
+        "id": "assumption.support_weight.agreement",
+        "path": "provenance.params.evidence.support_weights.agreement",
+        "value": 0.35,
+        "unit": "weight",
+        "basis": "Resolved run parameter (profile 'repurposing'); configured, not measured.",
+        "synthetic": false
+      },
+      {
+        "id": "assumption.support_weight.independence",
+        "path": "provenance.params.evidence.support_weights.independence",
+        "value": 0.25,
+        "unit": "weight",
+        "basis": "Resolved run parameter (profile 'repurposing'); configured, not measured.",
+        "synthetic": false
+      },
+      {
+        "id": "assumption.chain_aggregation",
+        "path": "provenance.params.evidence.chain_aggregation",
+        "value": "weakest",
+        "unit": null,
+        "basis": "Resolved run parameter (profile 'repurposing'); configured, not measured.",
+        "synthetic": false
+      },
+      {
+        "id": "assumption.single_group_cap",
+        "path": "provenance.params.evidence.single_group_cap",
+        "value": 0.6,
+        "unit": "score",
+        "basis": "Cap on any link's support while it rests on one research group. Resolved run parameter (profile 'repurposing'); configured, not measured.",
+        "synthetic": false
+      },
+      {
+        "id": "assumption.min_independent_groups",
+        "path": "provenance.params.evidence.min_independent_groups",
+        "value": 1,
+        "unit": "groups",
+        "basis": "Resolved run parameter (profile 'repurposing'); configured, not measured.",
+        "synthetic": false
+      },
+      {
+        "id": "assumption.novelty.hop_novelty",
+        "path": "provenance.params.novelty.hop_novelty",
+        "value": 0.22,
+        "unit": "weight",
+        "basis": "Resolved run parameter (profile 'repurposing'); configured, not measured.",
+        "synthetic": false
+      },
+      {
+        "id": "assumption.novelty.gap_novelty_bonus",
+        "path": "provenance.params.novelty.gap_novelty_bonus",
+        "value": 0.25,
+        "unit": "weight",
+        "basis": "Resolved run parameter (profile 'repurposing'); configured, not measured.",
+        "synthetic": false
+      },
+      {
+        "id": "assumption.novelty.searched_gap_bonus",
+        "path": "provenance.params.novelty.searched_gap_bonus",
+        "value": 0.2,
+        "unit": "weight",
+        "basis": "Resolved run parameter (profile 'repurposing'); configured, not measured.",
+        "synthetic": false
+      },
+      {
+        "id": "assumption.novelty.gap_confidence_cap",
+        "path": "provenance.params.novelty.gap_confidence_cap",
+        "value": 0.6,
+        "unit": "weight",
+        "basis": "Resolved run parameter (profile 'repurposing'); configured, not measured.",
+        "synthetic": false
+      },
+      {
+        "id": "assumption.novelty.popularity_penalty",
+        "path": "provenance.params.novelty.popularity_penalty",
+        "value": 0.15,
+        "unit": "weight",
+        "basis": "Resolved run parameter (profile 'repurposing'); configured, not measured.",
+        "synthetic": false
+      },
+      {
+        "id": "assumption.testable_kinds",
+        "path": "provenance.params.selection.testable_kinds",
+        "value": [
+          "method",
+          "small_molecule",
+          "gene",
+          "protein"
+        ],
+        "unit": null,
+        "basis": "Resolved run parameter (profile 'repurposing'); configured, not measured.",
+        "synthetic": false
+      },
+      {
+        "id": "assumption.contradiction_weight",
+        "path": "provenance.params.evidence.contradiction_weight",
+        "value": 1.0,
+        "unit": "weight",
+        "basis": "Resolved run parameter (profile 'repurposing'); configured, not measured.",
+        "synthetic": false
+      }
+    ],
+    "uncertainty": {
+      "method": "none",
+      "intervals": [],
+      "seed": null,
+      "draws": null,
+      "limitations": [
+        "Scores are deterministic heuristics computed once from the document; no interval, distribution or confidence level exists for them, and none is invented here."
+      ]
+    },
+    "limitations": [
+      {
+        "code": "NO_SOURCE_LOCATORS",
+        "severity": "INFO",
+        "message": "The knowledge graph records verbatim sentences but no page, figure or section locators, so every locator is null.",
+        "field_path": "interpretability.evidence"
+      },
+      {
+        "code": "EVIDENCE_GRADES_DERIVED",
+        "severity": "INFO",
+        "message": "Grades are derived deterministically from the recorded study type, hedging, firsthand status and independent-group count — they are a display mapping, not a new appraisal.",
+        "field_path": "interpretability.evidence"
+      },
+      {
+        "code": "UNTAGGED_VALUE",
+        "severity": "INFO",
+        "message": "metric.structure, metric.absence_reliability derive from graph topology and coverage recorded in provenance, not from citable evidence or a configured assumption.",
+        "field_path": "interpretability.metrics"
+      },
+      {
+        "code": "STRUCTURAL_CANDIDATE_NOT_ARTICULATED",
+        "severity": "WARNING",
+        "message": "Dry run: the candidate is a graph structure that was never articulated into a testable statement by a model; there is no falsifier or decisive experiment on record.",
+        "field_path": "hypothesis.articulation"
+      },
+      {
+        "code": "SINGLE_GROUP",
+        "severity": "WARNING",
+        "message": "all primary evidence here is from Distler; nothing replicates it",
+        "field_path": "hypothesis.issues"
+      },
+      {
+        "code": "DOCUMENT_CAVEAT",
+        "severity": "WARNING",
+        "message": "The search is a sample, not the literature: 36 of 318 results were read (hit max_papers). Absence of a link is weak evidence of absence.",
+        "field_path": "hypothesis.caveats"
+      },
+      {
+        "code": "DOCUMENT_CAVEAT",
+        "severity": "WARNING",
+        "message": "4 extracted claims were dropped for having no verbatim sentence, so the graph under-reports slightly.",
+        "field_path": "hypothesis.caveats"
+      },
+      {
+        "code": "DOCUMENT_CAVEAT",
+        "severity": "WARNING",
+        "message": "Novelty here rests on a gap, but this graph is not entitled to strong absence claims. Treat 'nobody has shown X' as 'this search did not surface X'.",
+        "field_path": "hypothesis.caveats"
+      },
+      {
+        "code": "COVERAGE_TRUNCATED",
+        "severity": "WARNING",
+        "message": "The search read 36 of 318 results; absence of a link is weak evidence of absence, and novelty is discounted for it.",
+        "field_path": "provenance.coverage"
+      },
+      {
+        "code": "HEURISTIC_SCORES",
+        "severity": "INFO",
+        "message": "support, novelty, testability, contradiction_risk, structure and rank_score are deterministic heuristics on 0..1, not probabilities.",
+        "field_path": "interpretability.metrics"
+      },
+      {
+        "code": "CANDIDATE_LEDGER_LIMITED",
+        "severity": "INFO",
+        "message": "The document carries only the winner; 4 candidate(s) were assembled and ranked before selection, but their scores are not in this bundle.",
+        "field_path": "interpretability.extensions.candidates"
+      },
+      {
+        "code": "NO_COUNTERFACTUALS_RECORDED",
+        "severity": "INFO",
+        "message": "No falsifier, decisive experiment or graph-builder ask is on record for this run, so no counterfactual can be stated without inventing one.",
+        "field_path": "interpretability.counterfactuals"
+      },
+      {
+        "code": "NOVELTY_NOT_RECONSTRUCTIBLE",
+        "severity": "INFO",
+        "message": "Novelty depends on node degrees recorded only in the input graph; the document carries the resulting score and its parameters, not those inputs.",
+        "field_path": "hypothesis.scores.novelty"
+      }
+    ],
+    "counterfactuals": [],
+    "lineage": [
+      {
+        "output_path": "hypothesis.rank_score",
+        "input_paths": [
+          "hypothesis.scores",
+          "provenance.params.selection.rank_weights",
+          "provenance.params.motifs.weights.analogical_transfer"
+        ],
+        "transformation": "Weighted sum of the axis scores, times the motif prior (step.rank_score)."
+      },
+      {
+        "output_path": "hypothesis.scores.support",
+        "input_paths": [
+          "hypothesis.evidence.findings",
+          "hypothesis.evidence.papers",
+          "provenance.params.evidence"
+        ],
+        "transformation": "Per-link support recomputed from findings and papers (study type, hedging, firsthand status, independent groups), then aggregated over the chain by 'weakest'."
+      },
+      {
+        "output_path": "hypothesis.scores.novelty",
+        "input_paths": [
+          "hypothesis.evidence.gap",
+          "provenance.coverage",
+          "provenance.params.novelty"
+        ],
+        "transformation": "Hop distance and gap bonuses, scaled by the graph's absence reliability and damped by node popularity. Node degrees live only in the graph, so this value cannot be re-derived from the document alone."
+      },
+      {
+        "output_path": "hypothesis.path",
+        "input_paths": [
+          "hypothesis.evidence.links"
+        ],
+        "transformation": "Typed, degree-weighted traversal of the input graph; a reversed hop is marked and rendered against the stated arrow."
+      }
+    ],
+    "extensions": {
+      "run_mode": "DRY_RUN",
+      "motif": "analogical_transfer",
+      "graph_path": [
+        {
+          "link": "L8",
+          "from": "t2",
+          "from_name": "nintedanib",
+          "how": "slows",
+          "to": "t11",
+          "to_name": "systemic sclerosis ILD",
+          "reversed": false,
+          "state": "single_source",
+          "support": 0.711
+        }
+      ],
+      "verification": {
+        "verdict": "qualified",
+        "gates": [
+          {
+            "name": "structure",
+            "status": "pass",
+            "summary": "1 hop(s), path intact, not already stated",
+            "issues": [],
+            "halting": true
+          },
+          {
+            "name": "citations",
+            "status": "skip",
+            "summary": "not articulated",
+            "issues": [],
+            "halting": true
+          },
+          {
+            "name": "consistency",
+            "status": "skip",
+            "summary": "not articulated",
+            "issues": [],
+            "halting": false
+          },
+          {
+            "name": "independence",
+            "status": "warn",
+            "summary": "all primary evidence here is from Distler; nothing replicates it",
+            "issues": [
+              {
+                "code": "single_group",
+                "detail": "all primary evidence here is from Distler; nothing replicates it",
+                "severity": "warning"
+              }
+            ],
+            "halting": true
+          },
+          {
+            "name": "falsifiability",
+            "status": "skip",
+            "summary": "not articulated",
+            "issues": [],
+            "halting": false
+          },
+          {
+            "name": "adversarial",
+            "status": "skip",
+            "summary": "not articulated",
+            "issues": [],
+            "halting": false
+          }
+        ],
+        "halted_at": null
+      },
+      "candidates": [],
+      "heuristic_scores": true
+    }
+  }
+}

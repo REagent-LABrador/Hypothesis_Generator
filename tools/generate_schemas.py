@@ -27,6 +27,8 @@ from pathlib import Path
 
 from schema_docs import model_markdown
 
+from adapters.interpretability import SCHEMA_VERSION as INTERP_VERSION
+from adapters.interpretability import Interpretability
 from adapters.valuation.program import Emission, ProgramFrame
 from adapters.webui.payload import WebPayload
 from hyp_gen.graph import KnowledgeGraph
@@ -126,6 +128,31 @@ novelty, then support.
 
 Rejection flags render on the card. The absence-of-evidence warning sits at
 payload level, where no card-only view can drop it.
+
+## `interpretability` — the shared LABrador contract
+
+Every payload carries a **required** top-level `interpretability` block: the
+LABrador-wide contract (v1.0.0) that lets one UI ask the same six questions of
+any module's result — what was concluded, why, on which evidence and
+assumptions, how each number was derived, what uncertainty remains, and what
+would change the conclusion. A payload without it does not validate.
+
+It is built for the bundle's winning hypothesis (highest `rank_score`) by
+`adapters/interpretability.py`, a pure mapping of the document: values are
+copied from the authoritative record, never recomputed, and every scoring
+constant the rank used — including the default structure weight and the motif
+prior — is emitted as an assumption so the displayed rank reconstructs exactly
+from the block. Unknown values stay `null` with a limitation naming them; all
+scores are labeled heuristics, never probabilities. Machine-readable form:
+[`schemas/interpretability.schema.json`](../../schemas/interpretability.schema.json)
+(standalone) and
+[`schemas/cards.schema.json`](../../schemas/cards.schema.json)
+(the full payload, `interpretability` required). Module-specific detail —
+`run_mode` (DRY_RUN / MODEL_ASSISTED / FULL), the graph path with reversed-edge
+markers, the verification gate table, and the ranked ledger of candidates not
+selected — lives in `interpretability.extensions`, which the shared UI must not
+require. Runtime facts (repo SHA, hashes, LIVE/CACHED origin, duration) are the
+orchestrator's to add, not duplicated here.
 
 ## `traces.svg`
 
@@ -270,9 +297,31 @@ def json_schemas() -> list[tuple[Path, dict]]:
         f"it. Prose contract: {CORE_SCHEMA}"
     )
 
+    interpretability = Interpretability.model_json_schema()
+    interpretability["$schema"] = "https://json-schema.org/draft/2020-12/schema"
+    interpretability["$id"] = "https://labrador.dev/schemas/interpretability.schema.json"
+    interpretability["title"] = "Interpretability"
+    interpretability["description"] = (
+        f"The shared LABrador interpretability contract (v{INTERP_VERSION}), as "
+        "hyp_gen emits it for the winning hypothesis. Required at the top level "
+        "of cards.json. Prose contract: adapters/webui/SCHEMA.md"
+    )
+
+    cards = WebPayload.model_json_schema()
+    cards["$schema"] = "https://json-schema.org/draft/2020-12/schema"
+    cards["$id"] = "https://labrador.dev/schemas/cards.schema.json"
+    cards["title"] = "WebPayload"
+    cards["description"] = (
+        "OUTPUT of the webui adapter, written as cards.json. One card per "
+        "hypothesis, plus the required interpretability block. Prose contract: "
+        "adapters/webui/SCHEMA.md"
+    )
+
     return [
         (SCHEMAS / "knowledge-graph.schema.json", graph),
         (SCHEMAS / "hypothesis.schema.json", hypothesis),
+        (SCHEMAS / "interpretability.schema.json", interpretability),
+        (SCHEMAS / "cards.schema.json", cards),
     ]
 
 

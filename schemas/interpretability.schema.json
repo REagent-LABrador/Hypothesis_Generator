@@ -1,0 +1,691 @@
+{
+  "$defs": {
+    "Assumption": {
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "title": "Basis",
+          "type": "string"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "path": {
+          "title": "Path",
+          "type": "string"
+        },
+        "synthetic": {
+          "title": "Synthetic",
+          "type": "boolean"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Unit"
+        },
+        "value": {
+          "title": "Value"
+        }
+      },
+      "required": [
+        "id",
+        "path",
+        "value",
+        "unit",
+        "basis",
+        "synthetic"
+      ],
+      "title": "Assumption",
+      "type": "object"
+    },
+    "Counterfactual": {
+      "additionalProperties": false,
+      "properties": {
+        "change": {
+          "title": "Change",
+          "type": "string"
+        },
+        "meaning": {
+          "title": "Meaning",
+          "type": "string"
+        },
+        "result": {
+          "title": "Result",
+          "type": "string"
+        }
+      },
+      "required": [
+        "change",
+        "result",
+        "meaning"
+      ],
+      "title": "Counterfactual",
+      "type": "object"
+    },
+    "Evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "claim": {
+          "title": "Claim",
+          "type": "string"
+        },
+        "grade": {
+          "enum": [
+            "HIGH",
+            "MODERATE",
+            "LOW",
+            "UNSUPPORTED"
+          ],
+          "title": "Grade",
+          "type": "string"
+        },
+        "id": {
+          "description": "evidence.<finding id> \u2014 the document's own id.",
+          "title": "Id",
+          "type": "string"
+        },
+        "locator": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Locator"
+        },
+        "quote": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Verbatim from the document, or null.",
+          "title": "Quote"
+        },
+        "source_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Source Id"
+        },
+        "source_type": {
+          "title": "Source Type",
+          "type": "string"
+        },
+        "source_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Source Url"
+        },
+        "synthetic": {
+          "title": "Synthetic",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "claim",
+        "source_type",
+        "source_id",
+        "source_url",
+        "locator",
+        "quote",
+        "grade",
+        "synthetic"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "Headline": {
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "description": "Where the conclusion comes from.",
+          "items": {
+            "enum": [
+              "OBSERVED",
+              "INFERRED",
+              "MODELED",
+              "SYNTHETIC"
+            ],
+            "type": "string"
+          },
+          "title": "Basis",
+          "type": "array"
+        },
+        "plain_language": {
+          "description": "One-sentence human explanation.",
+          "title": "Plain Language",
+          "type": "string"
+        },
+        "result": {
+          "description": "Stable machine-readable result.",
+          "title": "Result",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "SUPPORTED",
+            "QUALIFIED",
+            "INCONCLUSIVE",
+            "FAILED",
+            "NOT_APPLICABLE"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "title": {
+          "description": "Short UI title.",
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "result",
+        "plain_language",
+        "status",
+        "basis"
+      ],
+      "title": "Headline",
+      "type": "object"
+    },
+    "Interval": {
+      "additionalProperties": false,
+      "properties": {
+        "central": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Central"
+        },
+        "confidence_level": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Confidence Level"
+        },
+        "high": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "High"
+        },
+        "low": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Low"
+        },
+        "metric_id": {
+          "title": "Metric Id",
+          "type": "string"
+        },
+        "unit": {
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "metric_id",
+        "low",
+        "central",
+        "high",
+        "unit",
+        "confidence_level"
+      ],
+      "title": "Interval",
+      "type": "object"
+    },
+    "Limitation": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "description": "STABLE_MACHINE_CODE.",
+          "title": "Code",
+          "type": "string"
+        },
+        "field_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Field Path"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "severity": {
+          "enum": [
+            "INFO",
+            "WARNING",
+            "ERROR"
+          ],
+          "title": "Severity",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "severity",
+        "message",
+        "field_path"
+      ],
+      "title": "Limitation",
+      "type": "object"
+    },
+    "Lineage": {
+      "additionalProperties": false,
+      "properties": {
+        "input_paths": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Input Paths",
+          "type": "array"
+        },
+        "output_path": {
+          "title": "Output Path",
+          "type": "string"
+        },
+        "transformation": {
+          "title": "Transformation",
+          "type": "string"
+        }
+      },
+      "required": [
+        "output_path",
+        "input_paths",
+        "transformation"
+      ],
+      "title": "Lineage",
+      "type": "object"
+    },
+    "Metric": {
+      "additionalProperties": false,
+      "properties": {
+        "assumption_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Assumption Ids",
+          "type": "array"
+        },
+        "direction": {
+          "enum": [
+            "positive",
+            "negative",
+            "neutral",
+            "mixed",
+            "unknown"
+          ],
+          "title": "Direction",
+          "type": "string"
+        },
+        "display": {
+          "description": "Short, plain-text rendering. No HTML.",
+          "title": "Display",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "id": {
+          "description": "Stable machine id, metric.<name>. Never positional.",
+          "title": "Id",
+          "type": "string"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "meaning": {
+          "description": "Why this number matters. Heuristics say so.",
+          "title": "Meaning",
+          "type": "string"
+        },
+        "unit": {
+          "title": "Unit",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Null when genuinely unknown, never 0.",
+          "title": "Value"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "value",
+        "unit",
+        "display",
+        "meaning",
+        "direction",
+        "evidence_ids",
+        "assumption_ids"
+      ],
+      "title": "Metric",
+      "type": "object"
+    },
+    "Step": {
+      "additionalProperties": false,
+      "properties": {
+        "assumption_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Assumption Ids",
+          "type": "array"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "formula": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Formula"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "inputs": {
+          "items": {
+            "$ref": "#/$defs/StepInput"
+          },
+          "title": "Inputs",
+          "type": "array"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "method": {
+          "title": "Method",
+          "type": "string"
+        },
+        "result": {
+          "$ref": "#/$defs/StepResult"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "method",
+        "formula",
+        "inputs",
+        "result",
+        "evidence_ids",
+        "assumption_ids"
+      ],
+      "title": "Step",
+      "type": "object"
+    },
+    "StepInput": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "description": "Where in the document or params this value lives.",
+          "title": "Path",
+          "type": "string"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Unit"
+        },
+        "value": {
+          "title": "Value"
+        }
+      },
+      "required": [
+        "path",
+        "value",
+        "unit"
+      ],
+      "title": "StepInput",
+      "type": "object"
+    },
+    "StepResult": {
+      "additionalProperties": false,
+      "properties": {
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Unit"
+        },
+        "value": {
+          "title": "Value"
+        }
+      },
+      "required": [
+        "value",
+        "unit"
+      ],
+      "title": "StepResult",
+      "type": "object"
+    },
+    "Uncertainty": {
+      "additionalProperties": false,
+      "properties": {
+        "draws": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Draws"
+        },
+        "intervals": {
+          "items": {
+            "$ref": "#/$defs/Interval"
+          },
+          "title": "Intervals",
+          "type": "array"
+        },
+        "limitations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Limitations",
+          "type": "array"
+        },
+        "method": {
+          "title": "Method",
+          "type": "string"
+        },
+        "seed": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Seed"
+        }
+      },
+      "required": [
+        "method",
+        "intervals",
+        "seed",
+        "draws",
+        "limitations"
+      ],
+      "title": "Uncertainty",
+      "type": "object"
+    }
+  },
+  "$id": "https://labrador.dev/schemas/interpretability.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "The shared LABrador interpretability contract (v1.0.0), as hyp_gen emits it for the winning hypothesis. Required at the top level of cards.json. Prose contract: adapters/webui/SCHEMA.md",
+  "properties": {
+    "assumptions": {
+      "items": {
+        "$ref": "#/$defs/Assumption"
+      },
+      "title": "Assumptions",
+      "type": "array"
+    },
+    "counterfactuals": {
+      "items": {
+        "$ref": "#/$defs/Counterfactual"
+      },
+      "title": "Counterfactuals",
+      "type": "array"
+    },
+    "evidence": {
+      "items": {
+        "$ref": "#/$defs/Evidence"
+      },
+      "title": "Evidence",
+      "type": "array"
+    },
+    "extensions": {
+      "additionalProperties": true,
+      "description": "Module-specific structured data. The shared UI must not require it.",
+      "title": "Extensions",
+      "type": "object"
+    },
+    "headline": {
+      "$ref": "#/$defs/Headline"
+    },
+    "limitations": {
+      "items": {
+        "$ref": "#/$defs/Limitation"
+      },
+      "title": "Limitations",
+      "type": "array"
+    },
+    "lineage": {
+      "items": {
+        "$ref": "#/$defs/Lineage"
+      },
+      "title": "Lineage",
+      "type": "array"
+    },
+    "metrics": {
+      "items": {
+        "$ref": "#/$defs/Metric"
+      },
+      "title": "Metrics",
+      "type": "array"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "steps": {
+      "items": {
+        "$ref": "#/$defs/Step"
+      },
+      "title": "Steps",
+      "type": "array"
+    },
+    "uncertainty": {
+      "$ref": "#/$defs/Uncertainty"
+    }
+  },
+  "required": [
+    "headline",
+    "metrics",
+    "steps",
+    "evidence",
+    "assumptions",
+    "uncertainty",
+    "limitations",
+    "counterfactuals",
+    "lineage",
+    "extensions"
+  ],
+  "title": "Interpretability",
+  "type": "object"
+}

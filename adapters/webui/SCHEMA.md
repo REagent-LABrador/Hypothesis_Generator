@@ -42,6 +42,31 @@ novelty, then support.
 Rejection flags render on the card. The absence-of-evidence warning sits at
 payload level, where no card-only view can drop it.
 
+## `interpretability` — the shared LABrador contract
+
+Every payload carries a **required** top-level `interpretability` block: the
+LABrador-wide contract (v1.0.0) that lets one UI ask the same six questions of
+any module's result — what was concluded, why, on which evidence and
+assumptions, how each number was derived, what uncertainty remains, and what
+would change the conclusion. A payload without it does not validate.
+
+It is built for the bundle's winning hypothesis (highest `rank_score`) by
+`adapters/interpretability.py`, a pure mapping of the document: values are
+copied from the authoritative record, never recomputed, and every scoring
+constant the rank used — including the default structure weight and the motif
+prior — is emitted as an assumption so the displayed rank reconstructs exactly
+from the block. Unknown values stay `null` with a limitation naming them; all
+scores are labeled heuristics, never probabilities. Machine-readable form:
+[`schemas/interpretability.schema.json`](../../schemas/interpretability.schema.json)
+(standalone) and
+[`schemas/cards.schema.json`](../../schemas/cards.schema.json)
+(the full payload, `interpretability` required). Module-specific detail —
+`run_mode` (DRY_RUN / MODEL_ASSISTED / FULL), the graph path with reversed-edge
+markers, the verification gate table, and the ranked ledger of candidates not
+selected — lives in `interpretability.extensions`, which the shared UI must not
+require. Runtime facts (repo SHA, hashes, LIVE/CACHED origin, duration) are the
+orchestrator's to add, not duplicated here.
+
 ## `traces.svg`
 
 A static SVG of the walks. No plotting dependency, it diffs, and it embeds in a
@@ -74,6 +99,18 @@ does *not* have.
 | `coverage` | object | **yes** |  |
 | `warnings` | list of `string` | no | Bundle-level facts every card must be read next to. |
 | `hypotheses` | list of [Card](#card) | **yes** |  |
+| `interpretability` | [Interpretability](#interpretability) | **yes** | The shared LABrador interpretability contract for the bundle's winning hypothesis. Required: a payload without it does not validate. See adapters/interpretability.py and schemas/interpretability.schema.json. |
+
+## Assumption
+
+| Field | Type | Required | Meaning |
+|---|---|---|---|
+| `id` | `string` | **yes** |  |
+| `path` | `string` | **yes** |  |
+| `value` | any | **yes** |  |
+| `unit` | `string` or null | **yes** |  |
+| `basis` | `string` | **yes** |  |
+| `synthetic` | `boolean` | **yes** |  |
 
 ## Card
 
@@ -89,6 +126,38 @@ does *not* have.
 | `status` | [Status](#status) | **yes** |  |
 | `highlights` | list of [Highlight](#highlight) | **yes** |  |
 
+## Counterfactual
+
+| Field | Type | Required | Meaning |
+|---|---|---|---|
+| `change` | `string` | **yes** |  |
+| `result` | `string` | **yes** |  |
+| `meaning` | `string` | **yes** |  |
+
+## Evidence
+
+| Field | Type | Required | Meaning |
+|---|---|---|---|
+| `id` | `string` | **yes** | evidence.<finding id> — the document's own id. |
+| `claim` | `string` | **yes** |  |
+| `source_type` | `string` | **yes** |  |
+| `source_id` | `string` or null | **yes** |  |
+| `source_url` | `string` or null | **yes** |  |
+| `locator` | `string` or null | **yes** |  |
+| `quote` | `string` or null | **yes** | Verbatim from the document, or null. |
+| `grade` | `HIGH` \| `MODERATE` \| `LOW` \| `UNSUPPORTED` | **yes** |  |
+| `synthetic` | `boolean` | **yes** |  |
+
+## Headline
+
+| Field | Type | Required | Meaning |
+|---|---|---|---|
+| `title` | `string` | **yes** | Short UI title. |
+| `result` | `string` | **yes** | Stable machine-readable result. |
+| `plain_language` | `string` | **yes** | One-sentence human explanation. |
+| `status` | `SUPPORTED` \| `QUALIFIED` \| `INCONCLUSIVE` \| `FAILED` \| `NOT_APPLICABLE` | **yes** |  |
+| `basis` | list of `OBSERVED` \| `INFERRED` \| `MODELED` \| `SYNTHETIC` | **yes** | Where the conclusion comes from. |
+
 ## Highlight
 
 One punchy line, plus the ids that make it checkable.
@@ -98,6 +167,67 @@ One punchy line, plus the ids that make it checkable.
 | `kind` | `failure` \| `contradiction` \| `caution` \| `novelty` \| `support` | **yes** |  |
 | `text` | `string` | **yes** |  |
 | `refs` | list of `string` | no | Link/finding/gap ids this line was assembled from. |
+
+## Interpretability
+
+The shared contract. Every field is required; an empty array is legal
+only when genuinely not applicable, and a limitation must say why.
+
+| Field | Type | Required | Meaning |
+|---|---|---|---|
+| `schema_version` | `string` | no |  |
+| `headline` | [Headline](#headline) | **yes** |  |
+| `metrics` | list of [Metric](#metric) | **yes** |  |
+| `steps` | list of [Step](#step) | **yes** |  |
+| `evidence` | list of [Evidence](#evidence) | **yes** |  |
+| `assumptions` | list of [Assumption](#assumption) | **yes** |  |
+| `uncertainty` | [Uncertainty](#uncertainty) | **yes** |  |
+| `limitations` | list of [Limitation](#limitation) | **yes** |  |
+| `counterfactuals` | list of [Counterfactual](#counterfactual) | **yes** |  |
+| `lineage` | list of [Lineage](#lineage) | **yes** |  |
+| `extensions` | object | **yes** | Module-specific structured data. The shared UI must not require it. |
+
+## Interval
+
+| Field | Type | Required | Meaning |
+|---|---|---|---|
+| `metric_id` | `string` | **yes** |  |
+| `low` | `number` or null | **yes** |  |
+| `central` | `number` or null | **yes** |  |
+| `high` | `number` or null | **yes** |  |
+| `unit` | `string` | **yes** |  |
+| `confidence_level` | `number` or null | **yes** |  |
+
+## Limitation
+
+| Field | Type | Required | Meaning |
+|---|---|---|---|
+| `code` | `string` | **yes** | STABLE_MACHINE_CODE. |
+| `severity` | `INFO` \| `WARNING` \| `ERROR` | **yes** |  |
+| `message` | `string` | **yes** |  |
+| `field_path` | `string` or null | **yes** |  |
+
+## Lineage
+
+| Field | Type | Required | Meaning |
+|---|---|---|---|
+| `output_path` | `string` | **yes** |  |
+| `input_paths` | list of `string` | **yes** |  |
+| `transformation` | `string` | **yes** |  |
+
+## Metric
+
+| Field | Type | Required | Meaning |
+|---|---|---|---|
+| `id` | `string` | **yes** | Stable machine id, metric.<name>. Never positional. |
+| `label` | `string` | **yes** |  |
+| `value` | `number` or null | **yes** | Null when genuinely unknown, never 0. |
+| `unit` | `string` | **yes** |  |
+| `display` | `string` | **yes** | Short, plain-text rendering. No HTML. |
+| `meaning` | `string` | **yes** | Why this number matters. Heuristics say so. |
+| `direction` | `positive` \| `negative` \| `neutral` \| `mixed` \| `unknown` | **yes** |  |
+| `evidence_ids` | list of `string` | **yes** |  |
+| `assumption_ids` | list of `string` | **yes** |  |
 
 ## Metrics
 
@@ -115,3 +245,41 @@ One punchy line, plus the ids that make it checkable.
 | `verification` | `string` or null | no |  |
 | `critics` | `string` or null | no |  |
 | `flags` | list of `string` | no | Must-not-miss states: rejection badges, a halted gate run. |
+
+## Step
+
+| Field | Type | Required | Meaning |
+|---|---|---|---|
+| `id` | `string` | **yes** |  |
+| `label` | `string` | **yes** |  |
+| `method` | `string` | **yes** |  |
+| `formula` | `string` or null | **yes** |  |
+| `inputs` | list of [StepInput](#stepinput) | **yes** |  |
+| `result` | [StepResult](#stepresult) | **yes** |  |
+| `evidence_ids` | list of `string` | **yes** |  |
+| `assumption_ids` | list of `string` | **yes** |  |
+
+## StepInput
+
+| Field | Type | Required | Meaning |
+|---|---|---|---|
+| `path` | `string` | **yes** | Where in the document or params this value lives. |
+| `value` | any | **yes** |  |
+| `unit` | `string` or null | **yes** |  |
+
+## StepResult
+
+| Field | Type | Required | Meaning |
+|---|---|---|---|
+| `value` | any | **yes** |  |
+| `unit` | `string` or null | **yes** |  |
+
+## Uncertainty
+
+| Field | Type | Required | Meaning |
+|---|---|---|---|
+| `method` | `string` | **yes** |  |
+| `intervals` | list of [Interval](#interval) | **yes** |  |
+| `seed` | `integer` or null | **yes** |  |
+| `draws` | `integer` or null | **yes** |  |
+| `limitations` | list of `string` | **yes** |  |

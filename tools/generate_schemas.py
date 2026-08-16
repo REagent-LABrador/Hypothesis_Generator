@@ -27,6 +27,7 @@ from pathlib import Path
 
 from schema_docs import model_markdown
 
+from adapters.headless.runner import HeadlessRequest, HeadlessResponse
 from adapters.interpretability import SCHEMA_VERSION as INTERP_VERSION
 from adapters.interpretability import Interpretability
 from adapters.valuation.program import Emission, ProgramFrame
@@ -317,11 +318,31 @@ def json_schemas() -> list[tuple[Path, dict]]:
         "adapters/webui/SCHEMA.md"
     )
 
+    headless_input = HeadlessRequest.model_json_schema()
+    headless_input["$schema"] = "https://json-schema.org/draft/2020-12/schema"
+    headless_input["$id"] = "https://labrador.dev/schemas/headless-input.schema.json"
+    headless_input["title"] = "HeadlessRequest"
+    headless_input["description"] = (
+        "INPUT to hypgen-run: one native graph, one explicit focus, an analyst "
+        "valuation frame, and complete ROI execution settings."
+    )
+
+    headless_output = HeadlessResponse.model_json_schema()
+    headless_output["$schema"] = "https://json-schema.org/draft/2020-12/schema"
+    headless_output["$id"] = "https://labrador.dev/schemas/headless-output.schema.json"
+    headless_output["title"] = "HeadlessResponse"
+    headless_output["description"] = (
+        "OUTPUT of hypgen-run. COMPLETE carries the focused hypothesis, cards, "
+        "and ROI request; CANNOT_COMPLETE carries a stable terminal error."
+    )
+
     return [
         (SCHEMAS / "knowledge-graph.schema.json", graph),
         (SCHEMAS / "hypothesis.schema.json", hypothesis),
         (SCHEMAS / "interpretability.schema.json", interpretability),
         (SCHEMAS / "cards.schema.json", cards),
+        (SCHEMAS / "headless-input.schema.json", headless_input),
+        (SCHEMAS / "headless-output.schema.json", headless_output),
     ]
 
 

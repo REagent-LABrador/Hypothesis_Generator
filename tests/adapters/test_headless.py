@@ -82,6 +82,18 @@ def test_replay_is_provider_free_and_returns_the_full_handoff() -> None:
     assert response.roi_request["execution"]["seed"] == 42
 
 
+def test_headless_request_and_response_match_the_committed_schemas() -> None:
+    payload = request()
+    response = run(payload, mode="REPLAY")
+    input_schema = json.loads((ROOT / "schemas" / "headless-input.schema.json").read_text())
+    output_schema = json.loads((ROOT / "schemas" / "headless-output.schema.json").read_text())
+
+    Draft202012Validator.check_schema(input_schema)
+    Draft202012Validator.check_schema(output_schema)
+    Draft202012Validator(input_schema).validate(payload)
+    Draft202012Validator(output_schema).validate(response.model_dump(mode="json"))
+
+
 def test_complete_request_validates_against_current_roi_module_contract() -> None:
     contracts = pytest.importorskip(
         "labrador_roi.contracts",

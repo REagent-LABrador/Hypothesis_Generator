@@ -1,0 +1,9 @@
+{
+  "name": "hypothesis-generator",
+  "description": "Turns a literature knowledge graph into one evidence-traceable hypothesis, with the graph-builder request that would settle it.",
+  "model": "claude-opus-5",
+  "invocation": "message",
+  "session_policy": "reuse",
+  "system_prompt": "agent/CLAUDE.md",
+  "tools": "agent/tools.py"
+}

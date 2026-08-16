@@ -62,7 +62,7 @@ def _dry_run(generator: Generator) -> None:
         builtins.print(*args, **kwargs, file=sys.stderr)
 
     index: GraphIndex = generator.index
-    shortlist = generator.shortlist()
+    rows = generator.preview()
 
     print(f"graph {generator.graph.graph_id} round {generator.graph.round}")
     print(
@@ -89,18 +89,15 @@ def _dry_run(generator: Generator) -> None:
     header = f"{'id':<28}{'motif':<22}{'sup':>6}{'nov':>6}{'test':>6}{'risk':>6}{'str':>6}{'rank':>8}"
     print(header)
     print("-" * len(header))
-    for candidate, scores in shortlist:
+    for row in rows:
+        candidate, scores = row.candidate, row.scores
         print(
             f"{candidate.id[:27]:<28}{candidate.motif:<22}"
             f"{scores.support:>6.2f}{scores.novelty:>6.2f}{scores.testability:>6.2f}"
             f"{scores.contradiction_risk:>6.2f}{scores.structure:>6.2f}"
             f"{scores.rank_score:>8.3f}"
         )
-        chain = " → ".join(
-            [index.name(candidate.subject)]
-            + [index.name(e.dst) for e in candidate.path]
-        )
-        print(f"    {chain}")
+        print(f"    {' → '.join(row.chain)}")
         for note in scores.notes:
             print(f"    · {note}")
 
@@ -108,19 +105,12 @@ def _dry_run(generator: Generator) -> None:
         # which candidates would be rejected on structure or on resting entirely
         # on one lab. Those are the two failures worth knowing about before
         # spending a single model call.
-        context = verify.GateContext(
-            index=index,
-            candidate=candidate,
-            pack=build_pack(index, candidate, scores),
-            params=generator.params,
-        )
-        for gate in verify.verify(context).gates:
-            if gate.status in ("fail", "warn"):
-                mark = "✗" if gate.status == "fail" else "!"
-                print(f"    {mark} {gate.name}: {gate.summary}")
-    if not shortlist:
+        for gate in row.warnings:
+            mark = "✗" if gate.status == "fail" else "!"
+            print(f"    {mark} {gate.name}: {gate.summary}")
+    if not rows:
         print("(nothing survived selection — loosen the params or check the graph)")
-    print(f"\n{len(shortlist)} shortlisted. No model calls made.")
+    print(f"\n{len(rows)} shortlisted. No model calls made.")
 
 
 def main(argv: list[str] | None = None) -> int:

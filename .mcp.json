@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "hyp-gen": {
+      "command": ".venv/bin/python",
+      "args": ["-m", "agent.server"],
+      "env": {}
+    }
+  }
+}

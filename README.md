@@ -1,25 +1,27 @@
 # Hypothesis Generation
 
-A knowledge graph goes in. A set of hypotheses comes out, each one traceable to
-a link id, a finding id, and the verbatim sentence a human wrote.
+A knowledge graph goes in. **One hypothesis** comes out, traceable to a link
+id, a finding id, and the verbatim sentence a human wrote.
 
 ```
-examples/knowledge-graph.json  ──▶  hypotheses.json
+examples/knowledge-graph.json  ──▶  [ hyp_gen ]  ──▶  hypothesis.json
 ```
 
-That is the whole application. Both sides are schemas this repo owns and
-publishes:
+Many candidates are enumerated, scored, critiqued and ranked on the way there,
+because that is how the winner is known; only the winner crosses the boundary.
+Both sides are contracts this repo owns and publishes:
 
 
-|            | File                 | Schema                                                                       |
+|            | File                 | Contract                                                                     |
 | ---------- | -------------------- | ---------------------------------------------------------------------------- |
-| **Input**  | any graph you supply | `[schemas/knowledge-graph.schema.json](schemas/knowledge-graph.schema.json)` |
-| **Output** | `hypotheses.json`    | `[schemas/hypotheses.schema.json](schemas/hypotheses.schema.json)`           |
+| **Input**  | any graph you supply | [schemas/knowledge-graph.schema.json](schemas/knowledge-graph.schema.json)   |
+| **Output** | `hypothesis.json`    | [schemas/hypothesis.schema.json](schemas/hypothesis.schema.json)             |
 
 
-Both schemas are generated from the pydantic models that read and write them
-(`tools/generate_schemas.py`), and a test fails if the committed copies drift.
-The contract cannot rot away from the code.
+[`schemas/SCHEMA.md`](schemas/SCHEMA.md) is the authoritative, human-readable
+version of both — annotated JSON, the closed vocabularies, and a worked example
+from a real run. The JSON Schemas are generated from the pydantic models that
+read and write those files, and a test fails if a committed copy drifts.
 
 The app is deliberately blind to where the graph came from — no search
 strategy, no PubMed, no query log. If a fact is not in the graph, it cannot
@@ -36,11 +38,16 @@ rather than about luck.
 python3 -m venv .venv && .venv/bin/pip install -e '.[dev]'
 
 # Deterministic: enumeration, scoring, selection. No model calls, no API key.
-.venv/bin/hypgen --graph examples/knowledge-graph.json --dry-run
+.venv/bin/hypgen --graph examples/knowledge-graph.json --dry-run --out runs/first
 
 # Full run — articulate, critique, check citations. Needs ANTHROPIC_API_KEY.
 .venv/bin/hypgen --graph examples/knowledge-graph.json \
-  --profile repurposing --out runs/first-run
+  --profile repurposing --out runs/first
+
+# Adapters, over the document the core wrote.
+.venv/bin/hypreport    runs/first/hypothesis.json --mode trace --out runs/first
+.venv/bin/hypwebui     runs/first/hypothesis.json --svg runs/first/traces.svg
+.venv/bin/hypvaluation runs/first/hypothesis.json --frame frame.json --out runs/first/programs
 
 .venv/bin/python -m pytest
 ```
@@ -66,60 +73,88 @@ The `!` and `✗` lines are deterministic verification gates, which need no API
 key. `✗` is a candidate that will be thrown out — knowing that costs nothing
 here and a model call later.
 
-## `hypotheses.json` is the canonical artifact
+## `hypothesis.json` is the canonical artifact
 
-Everything else this app can write is a **pure function of that one file**. No
-view or export opens the graph or calls a model, which is why any of them can
-be regenerated from a saved run — and why none of them can state anything the
-record does not carry.
+Everything else this repo can write is a **pure function of that one file**. No
+adapter opens the graph or calls a model, which is why any of them can be
+re-run over a saved document — and why none of them can state anything the
+document does not carry.
 
 ```
-                        hypotheses.json   ← the record
+                        hypothesis.json   ← the record
                               │
         ┌─────────────────────┼──────────────────┬────────────────────┐
-   report.md               traces.svg        webui.json        *.program.json
-   --report-mode           --emit-diagram    --emit-webui      --emit-programs
+     report.md             traces.svg         cards.json        *.program.json
+   adapters/report       adapters/webui     adapters/webui   adapters/valuation
    prose|table|trace|full
 ```
 
 ```bash
 # Re-render anything from a saved run. Costs no model calls.
-hypgen --report-from runs/first-run/hypotheses.json --report-mode table --out runs/first-run
-hypgen --report-from runs/first-run/hypotheses.json --emit-diagram runs/first-run/traces.svg
+hypreport runs/first/hypothesis.json --mode table --out runs/first
+hypwebui  runs/first/hypothesis.json --svg runs/first/traces.svg
+
+# Or pipe the core straight into an adapter, with no file in between.
+hypgen --graph examples/knowledge-graph.json --dry-run | hypreport - --mode table
 ```
 
 A view changes the form, never the safety: failure badges, halted
 verifications, error-level validation issues and the absence-of-evidence notice
 render in all of them.
 
+## Driving it with an agent
+
+[`agent/`](agent/) is what a model needs to run this well:
+[`agent/CLAUDE.md`](agent/CLAUDE.md) is the system prompt — which stance to
+pick, how to read a verification gate table, and what may never be said about a
+result — and `agent/tools.py` exposes six tools over the core and the adapters,
+served over MCP by `agent/server.py`.
+
+```bash
+.venv/bin/pip install -e '.[dev,agent]'
+claude          # .mcp.json registers the server for a session at the repo root
+```
+
+Four of the six tools cost nothing and need no API key, which is the shape the
+prompt leans on: preview before you spend, and leave articulation off until
+somebody asks for prose. See [`agent/README.md`](agent/README.md).
+
 ## Layout
 
 ```
-src/hyp_gen/
+src/hyp_gen/               THE CORE
   graph.py       INPUT contract — the knowledge graph this app accepts
-  record.py      OUTPUT contract — HypothesisSet, written as hypotheses.json
+  hypothesis.py  OUTPUT contract — HypothesisDocument, written as hypothesis.json
   params.py      the knobs: profiles, the craziness dial, thresholds
-  pipeline.py    the run: graph in, record out
-  cli.py         the terminal surface
+  pipeline.py    the run, and RunResult.top() — the boundary
+  cli.py         hypgen
 
   generate/      deterministic pattern finding. No API key — this is --dry-run
   reasoning/     the only place a model is called
   checks/        what the model said, evaluated back against the graph
-  views/         report · diagram · webui   derived from the record
-  export/        valuation                  derived from the record
 
-schemas/         the two contracts above, as JSON Schema (generated, committed)
+adapters/                  EVERYTHING DERIVED FROM A HYPOTHESIS
+  common.py      the rules every adapter obeys, and the loader
+  report/        markdown, four modes        + SCHEMA.md
+  webui/         card payload and SVG trace  + SCHEMA.md
+  valuation/     briefs for the ROI model    + SCHEMA.md
+
+agent/           CLAUDE.md, the tools, and an MCP server
+schemas/         SCHEMA.md, plus the two contracts as JSON Schema (generated)
 tools/           generate_schemas.py
-examples/        a knowledge graph and an analyst frame to run against
-tests/           261 tests, offline, no network
+examples/        a knowledge graph, an analyst frame, and a real run
+tests/           311 tests, offline, no network
 ```
 
-The two contract files sit at the top level on purpose: they are the app's
-boundary, and everything under them is how you get from one to the other. The
-subpackages are grouped by what they need and what they trust — `generate/`
-needs only the graph, `reasoning/` is the only thing that costs money,
-`checks/` trusts neither the model nor the graph's own stated confidence, and
-`views/`/`export/` may read nothing but the record.
+The two contract files sit at the top of the core on purpose: they are the
+app's boundary, and everything under them is how you get from one to the other.
+The subpackages are grouped by what they need and what they trust — `generate/`
+needs only the graph, `reasoning/` is the only thing that costs money, `checks/`
+trusts neither the model nor the graph's own stated confidence, and no adapter
+may read anything but the document.
+
+The dependency runs one way: adapters and the agent import `hyp_gen`;
+`hyp_gen` imports neither, and no adapter imports another. A test enforces it.
 
 ## The pipeline
 
@@ -137,7 +172,7 @@ knowledge-graph.json
    ├─ checks/verify.py         six gates in cost order; a halt skips the rest, loudly
    ├─ generate/asks.py         weakest point → one request back to the graph builder
    │
-   └─ record.py                hypotheses.json
+   └─ RunResult.top()          the winner, as hypothesis.json
 ```
 
 Model calls happen only for candidates that survive selection, so cost scales
@@ -174,7 +209,7 @@ treated as a claim, not a fact. Support is recomputed from `findings` +
 independent-group counts applied. `drift` reports where we differ.
 - **Support and novelty are separate axes.** A fully supported hypothesis is a
 known fact. Averaging the two ranks textbook statements first, so the scores
-stay a vector and the Pareto front is in the record for whoever consumes it.
+stay a vector rather than collapsing into one number.
 - **A chain is as strong as its weakest link.** Weakest-link aggregation is the
 default because `mean` lets one strong link launder two weak ones.
 - **Hubs are damped, not banned.** Degree-weighted path counts (Rephetio's
@@ -231,7 +266,7 @@ is fluent nonsense.
 ## Verification
 
 Six gates, one of four verdicts (`verified` / `qualified` / `unverified` /
-`rejected`), recorded per hypothesis in `hypotheses.json`:
+`rejected`), recorded in `hypothesis.json`:
 
 ```
 gate 1 structure       PASS   3 hop(s), path intact, not already stated
@@ -249,10 +284,10 @@ VERDICT  unverified (halted: independence)
 **Working.** Graph parsing, typed/degree-weighted traversal, all four motifs,
 evidence recomputation, multi-objective scoring, MMR selection with quotas,
 evidence packs, staged six-gate verification with halting, articulation,
-multi-lens critique, Elo tournament, evolution rounds, graph-builder asks, four
-report modes, SVG traces, the web UI payload, the valuation export, CLI.
+multi-lens critique, Elo tournament, evolution rounds, graph-builder asks, all
+three adapters, and the agent layer over both.
 
-**Untested against the live API.** The model stages are exercised end-to-end by
+**Untested against the live API.** The model stages are exercised end to end by
 a scripted fake judge (including refusal, budget exhaustion, and
 illegal-citation paths), and the call shape is checked against `anthropic`
 0.122.0, but the first real run should be a `--profile conservative` one-off

@@ -36,6 +36,7 @@ from hyp_gen.reasoning import reason
 from hyp_gen.reasoning.llm import BudgetExceeded, Judge, RefusalError
 from hyp_gen.hypothesis import (
     Ask,
+    GateResult,
     Critique,
     Hypothesis,
     HypothesisDocument,
@@ -80,6 +81,21 @@ class RunResult(BaseModel):
 
 
 @dataclass
+class PreviewRow:
+    """One shortlisted candidate, before any model call has been made.
+
+    ``warnings`` holds only the gates that failed or warned -- a `fail` is a
+    candidate that will be thrown out, and knowing that costs nothing here and
+    a model call later.
+    """
+
+    candidate: Candidate
+    scores: Scores
+    chain: list[str]
+    warnings: list[GateResult]
+
+
+@dataclass
 class Generator:
     graph: KnowledgeGraph
     params: Params
@@ -113,6 +129,42 @@ class Generator:
             # so a slow graph is visible rather than mysterious.
             self.slow_enumeration = round(elapsed, 1)
         return select.select(score_all(self.index, candidates, self.params), self.params)
+
+    def preview(self) -> list[PreviewRow]:
+        """The shortlist with its deterministic gate results, and nothing else.
+
+        This is the whole of ``--dry-run``'s value in one call: what the
+        traversal found, how it scored, and which candidates the four keyless
+        gates would already reject. It costs no model calls, so it is the right
+        thing to look at before deciding whether a graph is worth paying to
+        articulate.
+
+        Returned as data rather than printed, because two callers need it --
+        the CLI formats it as a table, an agent reads it as JSON -- and a second
+        copy of the gate loop would be a second thing to keep correct.
+        """
+        rows: list[PreviewRow] = []
+        for candidate, scores in self.shortlist():
+            context = verify.GateContext(
+                index=self.index,
+                candidate=candidate,
+                pack=build_pack(self.index, candidate, scores),
+                params=self.params,
+            )
+            rows.append(
+                PreviewRow(
+                    candidate=candidate,
+                    scores=scores,
+                    chain=[self.index.name(candidate.subject)]
+                    + [self.index.name(e.dst) for e in candidate.path],
+                    warnings=[
+                        gate
+                        for gate in verify.verify(context).gates
+                        if gate.status in ("fail", "warn")
+                    ],
+                )
+            )
+        return rows
 
     def _assemble(
         self, candidate: Candidate, scores: Scores, position: int

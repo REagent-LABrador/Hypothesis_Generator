@@ -10,19 +10,23 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0"]
+# The agent layer is optional: the CLI and the adapters never import it, so a
+# consumer who only wants the generator does not pay for an MCP stack.
+agent = ["mcp>=1.2"]
 
 [project.scripts]
 hypgen = "hyp_gen.cli:main"
 hypreport = "adapters.report.cli:main"
 hypwebui = "adapters.webui.cli:main"
 hypvaluation = "adapters.valuation.cli:main"
+hypagent = "agent.server:main"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/hyp_gen", "adapters"]
+packages = ["src/hyp_gen", "adapters", "agent"]
 
 [tool.pytest.ini_options]
 pythonpath = ["src", "tools", ".", "tests"]

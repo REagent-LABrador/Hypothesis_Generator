@@ -6,11 +6,11 @@ different ways.
 | | file | what it is | what goes wrong without it |
 |---|---|---|---|
 | **Instructions** | [`CLAUDE.md`](./CLAUDE.md) | the system prompt | the agent runs the generator and reports its output dishonestly — nothing errors |
-| **Tools** | [`tools.py`](./tools.py) | six functions over the core and the adapters | the agent cannot run anything |
+| **Tools** | [`tools.py`](./tools.py) | six functions over the core and the adapters | the agent has no way to run anything, *if* it has no shell |
 
-The second is the easy half. `CLAUDE.md` is the deliverable here: it is what
-turns a correct number into an honestly reported one, and every rule in it was a
-failure mode before it was a sentence.
+`CLAUDE.md` is the deliverable here. It is what turns a correct number into an
+honestly reported one, and every rule in it was a failure mode before it was a
+sentence.
 
 ```
 agent/
@@ -19,6 +19,38 @@ agent/
   server.py       an MCP stdio server exposing them
   manifest.json   the definition, for deploying this as a hosted agent
 ```
+
+## Do you actually need the tools?
+
+**Often not, and it is worth being clear about it.**
+
+If the agent runs *on this machine with shell access* — a Claude Code session in
+this repo, say — it can already drive the generator: `hypgen` writes
+`hypothesis.json`, the adapters read it, and the agent reads files. The CLI is
+the tool surface. In that setup the useful half of this directory is
+`CLAUDE.md`, and the tools are a convenience.
+
+The tools become necessary when the agent **cannot reach a shell on this
+machine**: a hosted or managed agent running in a cloud sandbox, a desktop or
+web client, anything calling the API directly. That is the situation the
+previous version of this project was in — its tool layer existed precisely
+because the deployed agent could not execute the Python package, so every call
+had to be bridged back to the machine holding it.
+
+What the tools add even when a shell is available, honestly and in full:
+
+- **Smaller responses.** `hypothesis.json` wraps ~5KB of resolved parameters
+  around the part a reader wants. `generate_hypothesis` returns the summary,
+  `get_evidence` returns the quotes. A prompt telling the agent which fields to
+  pull would get most of the way there.
+- **Named affordances.** "There is a free preview; use it before you spend"
+  lands harder as a tool called `preview_candidates` whose schema says so than
+  as one more sentence competing for attention inside a prompt.
+
+That is the whole list. If you are running locally and want less machinery,
+`server.py`, `manifest.json` and `.mcp.json` can go without touching the core,
+the adapters, or the prompt's substance — only the tool names in `CLAUDE.md`
+would need rewriting to CLI invocations.
 
 ## The tools
 
@@ -90,6 +122,14 @@ called by a model*:
 than normalised — a knowledge graph is exactly the kind of input an injection
 rides in on, and a rule that cleans up a hostile path is one bug away from
 accepting it.
+
+Be clear about what that is worth. These guards are a real boundary **only when
+this layer is the agent's sole way to reach the disk**, which is the sandboxed
+deployment case. An agent that also has a shell can read whatever it likes
+regardless of what `resolve_graph` rejects, and there the guards are defence in
+depth against a careless tool call, not a barrier against a determined one. They
+are cheap and worth keeping either way; they are not a security model on their
+own.
 
 **How much comes back.** `hypothesis.json` carries the full resolved parameter
 set, several kilobytes of knobs that crowd out the evidence. `generate_hypothesis`

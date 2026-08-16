@@ -70,6 +70,10 @@ def test_a_graph_path_may_not_escape_its_directory(ref: str):
 
     A knowledge graph is exactly the kind of input an injection rides in on, and
     a rule that cleans up a hostile path is one bug away from accepting it.
+
+    What this does not prove: that the agent cannot read the file another way.
+    If it has a shell, it can. The guard binds a sandboxed deployment, where
+    these tools are the only route to the disk.
     """
     with pytest.raises(tools.ToolError) as exc:
         tools.resolve_graph(ref)

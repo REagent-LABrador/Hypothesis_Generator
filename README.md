@@ -117,7 +117,15 @@ claude          # .mcp.json registers the server for a session at the repo root
 
 Four of the six tools cost nothing and need no API key, which is the shape the
 prompt leans on: preview before you spend, and leave articulation off until
-somebody asks for prose. See [`agent/README.md`](agent/README.md).
+somebody asks for prose.
+
+**You may not need the tools.** An agent with shell access to this machine can
+already drive the generator — `hypgen` writes the document and the adapters read
+it, so the CLI *is* the tool surface, and `CLAUDE.md` is the part that matters.
+The tools and the MCP server exist for the agent that cannot reach a shell here:
+a hosted agent in a cloud sandbox, a desktop or web client, anything driving the
+API directly. [`agent/README.md`](agent/README.md) spells out what they add
+when a shell is available, and it is a short list.
 
 ## Layout
 

@@ -8,6 +8,12 @@ speak to it the same way. The server is deliberately thin — it registers six
 plain Python functions and lets the transport do the rest — so everything worth
 testing lives in ``tools.py`` and is tested without a transport in the way.
 
+**When this file earns its place.** An agent with shell access to this machine
+does not need it: ``hypgen`` writes the document and the adapters read it, so
+the CLI is already the tool surface. This exists for the agent that *cannot*
+reach a shell here — a hosted agent in a cloud sandbox, a desktop or web
+client, anything driving the API directly. See ``README.md`` beside this file.
+
 ``CLAUDE.md`` beside this file is the other half, and the more important one. A
 client that loads these tools without that prompt gets a working generator and
 no guidance on how to report what it returns honestly, which is exactly the half

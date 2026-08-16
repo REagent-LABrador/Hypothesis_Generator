@@ -13,6 +13,12 @@ input an injection rides in on, and an agent has no legitimate reason to read
 outside the graph roots or write outside ``runs/``. Both are enforced by
 rejecting the path, not by normalising it.
 
+This is a real boundary only when these tools are the agent's sole route to the
+disk -- the sandboxed-deployment case. An agent that also has a shell can read
+what it likes regardless, and there the guards catch a careless tool call rather
+than a determined one. Worth keeping either way; not a security model on their
+own.
+
 **How much comes back.** ``hypothesis.json`` carries the full resolved
 parameter set -- several kilobytes of knobs that mean nothing to a reader and
 crowd out the evidence. ``generate_hypothesis`` returns a summary and a path;

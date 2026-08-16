@@ -1,0 +1,586 @@
+{
+  "$defs": {
+    "Coverage": {
+      "additionalProperties": true,
+      "properties": {
+        "depth": {
+          "default": "standard",
+          "title": "Depth",
+          "type": "string"
+        },
+        "found": {
+          "default": 0,
+          "title": "Found",
+          "type": "integer"
+        },
+        "limits": {
+          "$ref": "#/$defs/Limits"
+        },
+        "no_quote_discarded": {
+          "default": 0,
+          "title": "No Quote Discarded",
+          "type": "integer"
+        },
+        "read": {
+          "default": 0,
+          "title": "Read",
+          "type": "integer"
+        },
+        "truncated": {
+          "default": false,
+          "title": "Truncated",
+          "type": "boolean"
+        },
+        "used": {
+          "default": 0,
+          "title": "Used",
+          "type": "integer"
+        }
+      },
+      "title": "Coverage",
+      "type": "object"
+    },
+    "Finding": {
+      "additionalProperties": true,
+      "properties": {
+        "confidence": {
+          "default": 0.5,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "flags": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Flags",
+          "type": "array"
+        },
+        "from": {
+          "title": "From",
+          "type": "string"
+        },
+        "hedged": {
+          "default": false,
+          "title": "Hedged",
+          "type": "boolean"
+        },
+        "how": {
+          "title": "How",
+          "type": "string"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "is_own_result": {
+          "default": true,
+          "title": "Is Own Result",
+          "type": "boolean"
+        },
+        "paper": {
+          "title": "Paper",
+          "type": "string"
+        },
+        "quote": {
+          "default": "",
+          "title": "Quote",
+          "type": "string"
+        },
+        "round": {
+          "default": 1,
+          "title": "Round",
+          "type": "integer"
+        },
+        "says": {
+          "default": "yes",
+          "title": "Says",
+          "type": "string"
+        },
+        "to": {
+          "title": "To",
+          "type": "string"
+        },
+        "where": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Where"
+        }
+      },
+      "required": [
+        "id",
+        "from",
+        "how",
+        "to",
+        "paper"
+      ],
+      "title": "Finding",
+      "type": "object"
+    },
+    "Gap": {
+      "additionalProperties": true,
+      "properties": {
+        "confidence": {
+          "default": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "implied_by": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Implied By",
+          "type": "array"
+        },
+        "missing": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Missing",
+          "type": "array"
+        },
+        "note": {
+          "default": "",
+          "title": "Note",
+          "type": "string"
+        },
+        "searched_in_round": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Searched In Round"
+        }
+      },
+      "required": [
+        "id",
+        "missing"
+      ],
+      "title": "Gap",
+      "type": "object"
+    },
+    "Limits": {
+      "additionalProperties": true,
+      "properties": {
+        "hit_limit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Hit Limit"
+        },
+        "max_papers": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Papers"
+        },
+        "max_queries": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Queries"
+        }
+      },
+      "title": "Limits",
+      "type": "object"
+    },
+    "Link": {
+      "additionalProperties": true,
+      "properties": {
+        "basis": {
+          "default": "primary",
+          "title": "Basis",
+          "type": "string"
+        },
+        "changed_in_round": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Changed In Round"
+        },
+        "confidence": {
+          "$ref": "#/$defs/LinkConfidence"
+        },
+        "from": {
+          "title": "From",
+          "type": "string"
+        },
+        "how": {
+          "title": "How",
+          "type": "string"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "no": {
+          "items": {
+            "type": "string"
+          },
+          "title": "No",
+          "type": "array"
+        },
+        "no_effect": {
+          "items": {
+            "type": "string"
+          },
+          "title": "No Effect",
+          "type": "array"
+        },
+        "state": {
+          "default": "single_source",
+          "title": "State",
+          "type": "string"
+        },
+        "to": {
+          "title": "To",
+          "type": "string"
+        },
+        "why": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Why"
+        },
+        "yes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Yes",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "from",
+        "how",
+        "to"
+      ],
+      "title": "Link",
+      "type": "object"
+    },
+    "LinkConfidence": {
+      "additionalProperties": true,
+      "properties": {
+        "agreement": {
+          "default": 0.0,
+          "title": "Agreement",
+          "type": "number"
+        },
+        "evidence_quality": {
+          "default": 0.0,
+          "title": "Evidence Quality",
+          "type": "number"
+        },
+        "independence": {
+          "default": 0.0,
+          "title": "Independence",
+          "type": "number"
+        },
+        "label": {
+          "default": "low",
+          "title": "Label",
+          "type": "string"
+        },
+        "overall": {
+          "default": 0.0,
+          "title": "Overall",
+          "type": "number"
+        }
+      },
+      "title": "LinkConfidence",
+      "type": "object"
+    },
+    "Paper": {
+      "additionalProperties": true,
+      "properties": {
+        "doi": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Doi"
+        },
+        "first_author": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "First Author"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "is_preprint": {
+          "default": false,
+          "title": "Is Preprint",
+          "type": "boolean"
+        },
+        "journal": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Journal"
+        },
+        "round": {
+          "default": 1,
+          "title": "Round",
+          "type": "integer"
+        },
+        "study_type": {
+          "default": "computational",
+          "title": "Study Type",
+          "type": "string"
+        },
+        "title": {
+          "default": "",
+          "title": "Title",
+          "type": "string"
+        },
+        "year": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Year"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "title": "Paper",
+      "type": "object"
+    },
+    "Round": {
+      "additionalProperties": true,
+      "properties": {
+        "ask": {
+          "title": "Ask",
+          "type": "string"
+        },
+        "depth": {
+          "default": "standard",
+          "title": "Depth",
+          "type": "string"
+        },
+        "n": {
+          "title": "N",
+          "type": "integer"
+        },
+        "papers_added": {
+          "default": 0,
+          "title": "Papers Added",
+          "type": "integer"
+        },
+        "target": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Target"
+        }
+      },
+      "required": [
+        "n",
+        "ask"
+      ],
+      "title": "Round",
+      "type": "object"
+    },
+    "Thing": {
+      "additionalProperties": true,
+      "properties": {
+        "aliases": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Aliases",
+          "type": "array"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "default": "process",
+          "title": "Kind",
+          "type": "string"
+        },
+        "mentions": {
+          "default": 0,
+          "title": "Mentions",
+          "type": "integer"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "title": "Thing",
+      "type": "object"
+    }
+  },
+  "$id": "https://labrador.dev/schemas/knowledge-graph.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "description": "INPUT to hyp_gen. A literature knowledge graph. Prose contract: src/hyp_gen/INPUT_SCHEMA.md",
+  "properties": {
+    "coverage": {
+      "$ref": "#/$defs/Coverage"
+    },
+    "findings": {
+      "items": {
+        "$ref": "#/$defs/Finding"
+      },
+      "title": "Findings",
+      "type": "array"
+    },
+    "gaps": {
+      "items": {
+        "$ref": "#/$defs/Gap"
+      },
+      "title": "Gaps",
+      "type": "array"
+    },
+    "generated_at": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Generated At"
+    },
+    "graph_id": {
+      "title": "Graph Id",
+      "type": "string"
+    },
+    "links": {
+      "items": {
+        "$ref": "#/$defs/Link"
+      },
+      "title": "Links",
+      "type": "array"
+    },
+    "papers": {
+      "items": {
+        "$ref": "#/$defs/Paper"
+      },
+      "title": "Papers",
+      "type": "array"
+    },
+    "question": {
+      "default": "",
+      "title": "Question",
+      "type": "string"
+    },
+    "round": {
+      "default": 1,
+      "title": "Round",
+      "type": "integer"
+    },
+    "rounds": {
+      "items": {
+        "$ref": "#/$defs/Round"
+      },
+      "title": "Rounds",
+      "type": "array"
+    },
+    "schema_version": {
+      "default": "1.1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "things": {
+      "items": {
+        "$ref": "#/$defs/Thing"
+      },
+      "title": "Things",
+      "type": "array"
+    }
+  },
+  "required": [
+    "graph_id"
+  ],
+  "title": "KnowledgeGraph",
+  "type": "object"
+}

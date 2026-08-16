@@ -1,0 +1,893 @@
+{
+  "schema_version": "1.1",
+  "graph_id": "g_demo1",
+  "question": "can an existing small molecule be repositioned against idiopathic pulmonary fibrosis?",
+  "round": 2,
+  "generated_at": "2026-08-15T09:12:00Z",
+  "rounds": [
+    {
+      "n": 1,
+      "ask": "new_question",
+      "target": null,
+      "depth": "standard",
+      "papers_added": 22
+    },
+    {
+      "n": 2,
+      "ask": "resolve_link",
+      "target": "L4",
+      "depth": "deep",
+      "papers_added": 14
+    }
+  ],
+  "coverage": {
+    "depth": "deep",
+    "found": 318,
+    "read": 36,
+    "used": 33,
+    "truncated": true,
+    "no_quote_discarded": 4,
+    "limits": {
+      "max_papers": 50,
+      "max_queries": 6,
+      "hit_limit": "max_papers"
+    }
+  },
+  "things": [
+    {
+      "id": "t1",
+      "name": "pirfenidone",
+      "kind": "small_molecule",
+      "aliases": [
+        "Esbriet"
+      ],
+      "mentions": 14
+    },
+    {
+      "id": "t2",
+      "name": "nintedanib",
+      "kind": "small_molecule",
+      "aliases": [
+        "BIBF 1120"
+      ],
+      "mentions": 12
+    },
+    {
+      "id": "t3",
+      "name": "TGF-beta1",
+      "kind": "protein",
+      "aliases": [
+        "TGFB1"
+      ],
+      "mentions": 19
+    },
+    {
+      "id": "t4",
+      "name": "myofibroblast differentiation",
+      "kind": "process",
+      "aliases": [],
+      "mentions": 15
+    },
+    {
+      "id": "t5",
+      "name": "idiopathic pulmonary fibrosis",
+      "kind": "disease",
+      "aliases": [
+        "IPF"
+      ],
+      "mentions": 21
+    },
+    {
+      "id": "t6",
+      "name": "PDGFR",
+      "kind": "protein",
+      "aliases": [
+        "PDGF receptor"
+      ],
+      "mentions": 9
+    },
+    {
+      "id": "t7",
+      "name": "collagen I deposition",
+      "kind": "process",
+      "aliases": [],
+      "mentions": 11
+    },
+    {
+      "id": "t8",
+      "name": "metformin",
+      "kind": "small_molecule",
+      "aliases": [],
+      "mentions": 8
+    },
+    {
+      "id": "t9",
+      "name": "AMPK",
+      "kind": "protein",
+      "aliases": [],
+      "mentions": 10
+    },
+    {
+      "id": "t10",
+      "name": "precision-cut lung slice",
+      "kind": "method",
+      "aliases": [
+        "PCLS"
+      ],
+      "mentions": 6
+    },
+    {
+      "id": "t11",
+      "name": "systemic sclerosis ILD",
+      "kind": "disease",
+      "aliases": [
+        "SSc-ILD"
+      ],
+      "mentions": 5
+    },
+    {
+      "id": "t12",
+      "name": "senescent alveolar epithelium",
+      "kind": "process",
+      "aliases": [],
+      "mentions": 7
+    }
+  ],
+  "papers": [
+    {
+      "id": "p1",
+      "title": "Pirfenidone attenuates TGF-beta1 driven fibroblast activation",
+      "year": 2019,
+      "journal": "Am J Respir Cell Mol Biol",
+      "doi": "10.1165/x1",
+      "first_author": "Conte",
+      "study_type": "test_tube",
+      "is_preprint": false,
+      "round": 1
+    },
+    {
+      "id": "p2",
+      "title": "Nintedanib inhibits PDGFR signalling in lung fibroblasts",
+      "year": 2020,
+      "journal": "Eur Respir J",
+      "doi": "10.1183/x2",
+      "first_author": "Wollin",
+      "study_type": "test_tube",
+      "is_preprint": false,
+      "round": 1
+    },
+    {
+      "id": "p3",
+      "title": "TGF-beta1 drives myofibroblast differentiation",
+      "year": 2018,
+      "journal": "J Clin Invest",
+      "doi": "10.1172/x3",
+      "first_author": "Hinz",
+      "study_type": "animal",
+      "is_preprint": false,
+      "round": 1
+    },
+    {
+      "id": "p4",
+      "title": "Myofibroblasts and collagen accumulation in IPF lung",
+      "year": 2021,
+      "journal": "Lancet Respir Med",
+      "doi": "10.1016/x4",
+      "first_author": "Selman",
+      "study_type": "human_cohort",
+      "is_preprint": false,
+      "round": 1
+    },
+    {
+      "id": "p5",
+      "title": "Metformin activates AMPK and reverses established fibrosis",
+      "year": 2018,
+      "journal": "Nat Med",
+      "doi": "10.1038/x5",
+      "first_author": "Rangarajan",
+      "study_type": "animal",
+      "is_preprint": false,
+      "round": 1
+    },
+    {
+      "id": "p6",
+      "title": "AMPK activation limits collagen I deposition",
+      "year": 2022,
+      "journal": "Cell Rep",
+      "doi": "10.1016/x6",
+      "first_author": "Bernard",
+      "study_type": "test_tube",
+      "is_preprint": false,
+      "round": 1
+    },
+    {
+      "id": "p7",
+      "title": "Metformin does not reduce collagen in aged murine lung",
+      "year": 2023,
+      "journal": "bioRxiv",
+      "doi": "10.1101/x7",
+      "first_author": "Okonkwo",
+      "study_type": "animal",
+      "is_preprint": true,
+      "round": 2
+    },
+    {
+      "id": "p8",
+      "title": "Precision-cut lung slices as a fibrosis testbed",
+      "year": 2022,
+      "journal": "Am J Physiol",
+      "doi": "10.1152/x8",
+      "first_author": "Alsafadi",
+      "study_type": "test_tube",
+      "is_preprint": false,
+      "round": 2
+    },
+    {
+      "id": "p9",
+      "title": "Nintedanib slows decline in SSc-ILD",
+      "year": 2019,
+      "journal": "N Engl J Med",
+      "doi": "10.1056/x9",
+      "first_author": "Distler",
+      "study_type": "clinical_trial",
+      "is_preprint": false,
+      "round": 1
+    },
+    {
+      "id": "p10",
+      "title": "Senescent epithelium sustains fibrotic signalling",
+      "year": 2021,
+      "journal": "Sci Transl Med",
+      "doi": "10.1126/x10",
+      "first_author": "Schafer",
+      "study_type": "animal",
+      "is_preprint": false,
+      "round": 2
+    },
+    {
+      "id": "p11",
+      "title": "Collagen burden predicts survival in IPF",
+      "year": 2020,
+      "journal": "Thorax",
+      "doi": "10.1136/x11",
+      "first_author": "Jenkins",
+      "study_type": "human_cohort",
+      "is_preprint": false,
+      "round": 1
+    },
+    {
+      "id": "p12",
+      "title": "Review: antifibrotic mechanisms",
+      "year": 2022,
+      "journal": "Pharmacol Rev",
+      "doi": "10.1124/x12",
+      "first_author": "Martinez",
+      "study_type": "review",
+      "is_preprint": false,
+      "round": 2
+    }
+  ],
+  "findings": [
+    {
+      "id": "f1",
+      "from": "t1",
+      "how": "inhibits",
+      "to": "t3",
+      "says": "yes",
+      "quote": "pirfenidone reduced TGF-beta1 secretion in stimulated fibroblasts by 46%",
+      "paper": "p1",
+      "where": "human lung fibroblast culture",
+      "is_own_result": true,
+      "hedged": false,
+      "confidence": 0.9,
+      "flags": [],
+      "round": 1
+    },
+    {
+      "id": "f2",
+      "from": "t2",
+      "how": "inhibits",
+      "to": "t6",
+      "says": "yes",
+      "quote": "nintedanib blocked PDGFR autophosphorylation at nanomolar concentrations",
+      "paper": "p2",
+      "where": "test tube",
+      "is_own_result": true,
+      "hedged": false,
+      "confidence": 0.92,
+      "flags": [],
+      "round": 1
+    },
+    {
+      "id": "f3",
+      "from": "t3",
+      "how": "drives",
+      "to": "t4",
+      "says": "yes",
+      "quote": "TGF-beta1 exposure induced alpha-SMA positive myofibroblast conversion",
+      "paper": "p3",
+      "where": "murine lung",
+      "is_own_result": true,
+      "hedged": false,
+      "confidence": 0.88,
+      "flags": [],
+      "round": 1
+    },
+    {
+      "id": "f4",
+      "from": "t4",
+      "how": "contributes_to",
+      "to": "t5",
+      "says": "yes",
+      "quote": "myofibroblast foci density correlated with disease progression in IPF explants",
+      "paper": "p4",
+      "where": "human explant cohort",
+      "is_own_result": true,
+      "hedged": false,
+      "confidence": 0.85,
+      "flags": [],
+      "round": 1
+    },
+    {
+      "id": "f5",
+      "from": "t8",
+      "how": "activates",
+      "to": "t9",
+      "says": "yes",
+      "quote": "metformin treatment increased phosphorylated AMPK in fibrotic lung tissue",
+      "paper": "p5",
+      "where": "bleomycin mouse model",
+      "is_own_result": true,
+      "hedged": false,
+      "confidence": 0.9,
+      "flags": [],
+      "round": 1
+    },
+    {
+      "id": "f6",
+      "from": "t9",
+      "how": "suppresses",
+      "to": "t7",
+      "says": "yes",
+      "quote": "AMPK activation lowered collagen I accumulation in fibroblasts",
+      "paper": "p6",
+      "where": "human fibroblast culture",
+      "is_own_result": true,
+      "hedged": false,
+      "confidence": 0.87,
+      "flags": [],
+      "round": 1
+    },
+    {
+      "id": "f7",
+      "from": "t9",
+      "how": "suppresses",
+      "to": "t7",
+      "says": "no",
+      "quote": "AMPK activation did not lower collagen I content in aged animals",
+      "paper": "p7",
+      "where": "aged murine lung",
+      "is_own_result": true,
+      "hedged": false,
+      "confidence": 0.8,
+      "flags": [],
+      "round": 2
+    },
+    {
+      "id": "f8",
+      "from": "t7",
+      "how": "contributes_to",
+      "to": "t5",
+      "says": "yes",
+      "quote": "collagen deposition burden was associated with reduced transplant-free survival",
+      "paper": "p11",
+      "where": "human cohort",
+      "is_own_result": true,
+      "hedged": false,
+      "confidence": 0.86,
+      "flags": [],
+      "round": 1
+    },
+    {
+      "id": "f9",
+      "from": "t2",
+      "how": "slows",
+      "to": "t11",
+      "says": "yes",
+      "quote": "nintedanib reduced the annual rate of FVC decline in SSc-ILD",
+      "paper": "p9",
+      "where": "phase 3 trial",
+      "is_own_result": true,
+      "hedged": false,
+      "confidence": 0.95,
+      "flags": [],
+      "round": 1
+    },
+    {
+      "id": "f10",
+      "from": "t3",
+      "how": "drives",
+      "to": "t7",
+      "says": "yes",
+      "quote": "TGF-beta1 stimulation increased collagen I transcription",
+      "paper": "p3",
+      "where": "murine lung",
+      "is_own_result": true,
+      "hedged": false,
+      "confidence": 0.83,
+      "flags": [],
+      "round": 1
+    },
+    {
+      "id": "f11",
+      "from": "t12",
+      "how": "sustains",
+      "to": "t3",
+      "says": "yes",
+      "quote": "senescent epithelial cells maintained elevated TGF-beta1 signalling",
+      "paper": "p10",
+      "where": "murine lung",
+      "is_own_result": true,
+      "hedged": false,
+      "confidence": 0.84,
+      "flags": [],
+      "round": 2
+    },
+    {
+      "id": "f12",
+      "from": "t10",
+      "how": "measures",
+      "to": "t4",
+      "says": "yes",
+      "quote": "precision-cut lung slices retained myofibroblast responses for seven days",
+      "paper": "p8",
+      "where": "human PCLS",
+      "is_own_result": true,
+      "hedged": false,
+      "confidence": 0.8,
+      "flags": [],
+      "round": 2
+    },
+    {
+      "id": "f13",
+      "from": "t1",
+      "how": "inhibits",
+      "to": "t3",
+      "says": "yes",
+      "quote": "pirfenidone may attenuate TGF-beta1 driven signalling",
+      "paper": "p12",
+      "where": null,
+      "is_own_result": false,
+      "hedged": true,
+      "confidence": 0.6,
+      "flags": [],
+      "round": 2
+    },
+    {
+      "id": "f14",
+      "from": "t12",
+      "how": "contributes_to",
+      "to": "t5",
+      "says": "yes",
+      "quote": "senescence markers were enriched in IPF alveolar epithelium",
+      "paper": "p10",
+      "where": "human tissue",
+      "is_own_result": true,
+      "hedged": false,
+      "confidence": 0.82,
+      "flags": [],
+      "round": 2
+    },
+    {
+      "id": "f15",
+      "from": "t2",
+      "how": "inhibits",
+      "to": "t3",
+      "says": "yes",
+      "quote": "nintedanib attenuated TGF-beta1 induced fibroblast migration",
+      "paper": "p2",
+      "where": "test tube",
+      "is_own_result": true,
+      "hedged": false,
+      "confidence": 0.78,
+      "flags": [],
+      "round": 1
+    },
+    {
+      "id": "f16",
+      "from": "t1",
+      "how": "inhibits",
+      "to": "t4",
+      "says": "yes",
+      "quote": "pirfenidone suppressed alpha-SMA positive myofibroblast conversion in a dose dependent manner",
+      "paper": "p1",
+      "where": "human lung fibroblast culture",
+      "is_own_result": true,
+      "hedged": false,
+      "confidence": 0.86,
+      "flags": [],
+      "round": 1
+    },
+    {
+      "id": "f17",
+      "from": "t2",
+      "how": "inhibits",
+      "to": "t4",
+      "says": "yes",
+      "quote": "nintedanib reduced myofibroblast marker expression in treated slices",
+      "paper": "p8",
+      "where": "human PCLS",
+      "is_own_result": true,
+      "hedged": false,
+      "confidence": 0.79,
+      "flags": [],
+      "round": 2
+    }
+  ],
+  "links": [
+    {
+      "id": "L1",
+      "from": "t1",
+      "how": "inhibits",
+      "to": "t3",
+      "yes": [
+        "f1",
+        "f13"
+      ],
+      "no": [],
+      "no_effect": [],
+      "state": "agreed",
+      "why": null,
+      "basis": "mixed",
+      "confidence": {
+        "overall": 0.62,
+        "label": "medium",
+        "evidence_quality": 0.5,
+        "agreement": 1.0,
+        "independence": 0.0
+      },
+      "changed_in_round": 2
+    },
+    {
+      "id": "L2",
+      "from": "t2",
+      "how": "inhibits",
+      "to": "t6",
+      "yes": [
+        "f2"
+      ],
+      "no": [],
+      "no_effect": [],
+      "state": "single_source",
+      "why": null,
+      "basis": "primary",
+      "confidence": {
+        "overall": 0.55,
+        "label": "medium",
+        "evidence_quality": 0.45,
+        "agreement": 1.0,
+        "independence": 0.0
+      },
+      "changed_in_round": null
+    },
+    {
+      "id": "L3",
+      "from": "t3",
+      "how": "drives",
+      "to": "t4",
+      "yes": [
+        "f3"
+      ],
+      "no": [],
+      "no_effect": [],
+      "state": "single_source",
+      "why": null,
+      "basis": "primary",
+      "confidence": {
+        "overall": 0.66,
+        "label": "medium",
+        "evidence_quality": 0.6,
+        "agreement": 1.0,
+        "independence": 0.0
+      },
+      "changed_in_round": null
+    },
+    {
+      "id": "L4",
+      "from": "t4",
+      "how": "contributes_to",
+      "to": "t5",
+      "yes": [
+        "f4"
+      ],
+      "no": [],
+      "no_effect": [],
+      "state": "single_source",
+      "why": null,
+      "basis": "primary",
+      "confidence": {
+        "overall": 0.74,
+        "label": "high",
+        "evidence_quality": 0.8,
+        "agreement": 1.0,
+        "independence": 0.0
+      },
+      "changed_in_round": 2
+    },
+    {
+      "id": "L5",
+      "from": "t8",
+      "how": "activates",
+      "to": "t9",
+      "yes": [
+        "f5"
+      ],
+      "no": [],
+      "no_effect": [],
+      "state": "single_source",
+      "why": null,
+      "basis": "primary",
+      "confidence": {
+        "overall": 0.6,
+        "label": "medium",
+        "evidence_quality": 0.6,
+        "agreement": 1.0,
+        "independence": 0.0
+      },
+      "changed_in_round": null
+    },
+    {
+      "id": "L6",
+      "from": "t9",
+      "how": "suppresses",
+      "to": "t7",
+      "yes": [
+        "f6"
+      ],
+      "no": [
+        "f7"
+      ],
+      "no_effect": [],
+      "state": "disagreed",
+      "why": "different animal age",
+      "basis": "primary",
+      "confidence": {
+        "overall": 0.41,
+        "label": "medium",
+        "evidence_quality": 0.45,
+        "agreement": 0.5,
+        "independence": 0.5
+      },
+      "changed_in_round": 2
+    },
+    {
+      "id": "L7",
+      "from": "t7",
+      "how": "contributes_to",
+      "to": "t5",
+      "yes": [
+        "f8"
+      ],
+      "no": [],
+      "no_effect": [],
+      "state": "single_source",
+      "why": null,
+      "basis": "primary",
+      "confidence": {
+        "overall": 0.72,
+        "label": "high",
+        "evidence_quality": 0.8,
+        "agreement": 1.0,
+        "independence": 0.0
+      },
+      "changed_in_round": null
+    },
+    {
+      "id": "L8",
+      "from": "t2",
+      "how": "slows",
+      "to": "t11",
+      "yes": [
+        "f9"
+      ],
+      "no": [],
+      "no_effect": [],
+      "state": "single_source",
+      "why": null,
+      "basis": "primary",
+      "confidence": {
+        "overall": 0.8,
+        "label": "high",
+        "evidence_quality": 0.95,
+        "agreement": 1.0,
+        "independence": 0.0
+      },
+      "changed_in_round": null
+    },
+    {
+      "id": "L9",
+      "from": "t3",
+      "how": "drives",
+      "to": "t7",
+      "yes": [
+        "f10"
+      ],
+      "no": [],
+      "no_effect": [],
+      "state": "single_source",
+      "why": null,
+      "basis": "primary",
+      "confidence": {
+        "overall": 0.63,
+        "label": "medium",
+        "evidence_quality": 0.6,
+        "agreement": 1.0,
+        "independence": 0.0
+      },
+      "changed_in_round": null
+    },
+    {
+      "id": "L10",
+      "from": "t12",
+      "how": "sustains",
+      "to": "t3",
+      "yes": [
+        "f11"
+      ],
+      "no": [],
+      "no_effect": [],
+      "state": "single_source",
+      "why": null,
+      "basis": "primary",
+      "confidence": {
+        "overall": 0.61,
+        "label": "medium",
+        "evidence_quality": 0.6,
+        "agreement": 1.0,
+        "independence": 0.0
+      },
+      "changed_in_round": null
+    },
+    {
+      "id": "L11",
+      "from": "t10",
+      "how": "measures",
+      "to": "t4",
+      "yes": [
+        "f12"
+      ],
+      "no": [],
+      "no_effect": [],
+      "state": "single_source",
+      "why": null,
+      "basis": "primary",
+      "confidence": {
+        "overall": 0.52,
+        "label": "medium",
+        "evidence_quality": 0.45,
+        "agreement": 1.0,
+        "independence": 0.0
+      },
+      "changed_in_round": null
+    },
+    {
+      "id": "L12",
+      "from": "t12",
+      "how": "contributes_to",
+      "to": "t5",
+      "yes": [
+        "f14"
+      ],
+      "no": [],
+      "no_effect": [],
+      "state": "single_source",
+      "why": null,
+      "basis": "primary",
+      "confidence": {
+        "overall": 0.7,
+        "label": "high",
+        "evidence_quality": 0.6,
+        "agreement": 1.0,
+        "independence": 0.0
+      },
+      "changed_in_round": null
+    },
+    {
+      "id": "L13",
+      "from": "t2",
+      "how": "inhibits",
+      "to": "t3",
+      "yes": [
+        "f15"
+      ],
+      "no": [],
+      "no_effect": [],
+      "state": "single_source",
+      "why": null,
+      "basis": "primary",
+      "confidence": {
+        "overall": 0.5,
+        "label": "medium",
+        "evidence_quality": 0.45,
+        "agreement": 1.0,
+        "independence": 0.0
+      },
+      "changed_in_round": null
+    },
+    {
+      "id": "L14",
+      "from": "t1",
+      "how": "inhibits",
+      "to": "t4",
+      "yes": [
+        "f16"
+      ],
+      "no": [],
+      "no_effect": [],
+      "state": "single_source",
+      "why": null,
+      "basis": "primary",
+      "confidence": {
+        "overall": 0.58,
+        "label": "medium",
+        "evidence_quality": 0.45,
+        "agreement": 1.0,
+        "independence": 0.0
+      },
+      "changed_in_round": null
+    },
+    {
+      "id": "L15",
+      "from": "t2",
+      "how": "inhibits",
+      "to": "t4",
+      "yes": [
+        "f17"
+      ],
+      "no": [],
+      "no_effect": [],
+      "state": "single_source",
+      "why": null,
+      "basis": "primary",
+      "confidence": {
+        "overall": 0.54,
+        "label": "medium",
+        "evidence_quality": 0.45,
+        "agreement": 1.0,
+        "independence": 0.0
+      },
+      "changed_in_round": 2
+    }
+  ],
+  "gaps": [
+    {
+      "id": "g1",
+      "missing": [
+        "t8",
+        "t5"
+      ],
+      "implied_by": [
+        "L5",
+        "L6",
+        "L7"
+      ],
+      "note": "nobody states metformin affects IPF directly",
+      "confidence": 0.38,
+      "searched_in_round": null
+    },
+    {
+      "id": "g2",
+      "missing": [
+        "t1",
+        "t11"
+      ],
+      "implied_by": [
+        "L1",
+        "L8"
+      ],
+      "note": "pirfenidone is never linked to SSc-ILD despite the shared antifibrotic target",
+      "confidence": 0.31,
+      "searched_in_round": 2
+    }
+  ]
+}

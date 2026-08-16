@@ -1,0 +1,25 @@
+{
+  "_README": [
+    "Worked-example analyst frame for fixtures/example_graph.json (the IPF repurposing demo).",
+    "Every value here is an ILLUSTRATIVE ANALYST DECISION, not a finding, and not sourced.",
+    "It exists so the hyp_gen -> LABrador handoff can be exercised end to end; it is not a",
+    "scenario anyone has defended. Replace all of it before quoting a number.",
+    "The frame carries only what a literature graph cannot: currency, geography, route, the",
+    "line of therapy, the valuation and launch years, and the patent filing year."
+  ],
+  "base_year": 2026,
+  "valuation_year": 2026,
+  "launch_year": 2031,
+  "filing_year": 2019,
+  "currency": "USD",
+  "geography": "United States",
+  "therapeutic_area": "Pulmonology",
+  "target_population": "Adults with idiopathic pulmonary fibrosis",
+  "line_of_therapy": "Second line",
+  "route": "ORAL",
+  "current_stage": "phase_2",
+  "modality": null,
+  "target": null,
+  "expansion_launch_year": 2033,
+  "notes": "Illustrative repurposing scenario; filing_year is a placeholder for a new-use filing and has not been checked against Orange Book."
+}

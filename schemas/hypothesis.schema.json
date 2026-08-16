@@ -1,0 +1,650 @@
+{
+  "$defs": {
+    "Articulation": {
+      "additionalProperties": false,
+      "description": "What the model is asked to produce from one structural candidate.",
+      "properties": {
+        "assumptions": {
+          "description": "What must be true but is not in the graph.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Assumptions",
+          "type": "array"
+        },
+        "claims": {
+          "description": "The hypothesis decomposed into checkable pieces.",
+          "items": {
+            "$ref": "#/$defs/Claim"
+          },
+          "title": "Claims",
+          "type": "array"
+        },
+        "decisive_experiment": {
+          "description": "The cheapest experiment that discriminates.",
+          "title": "Decisive Experiment",
+          "type": "string"
+        },
+        "falsifier": {
+          "description": "The single observation that would kill this.",
+          "title": "Falsifier",
+          "type": "string"
+        },
+        "mechanism": {
+          "description": "The proposed causal chain, in graph terms.",
+          "title": "Mechanism",
+          "type": "string"
+        },
+        "novel_because": {
+          "description": "What the graph does NOT already state.",
+          "title": "Novel Because",
+          "type": "string"
+        },
+        "predictions": {
+          "description": "Observations that should hold if this is true.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Predictions",
+          "type": "array"
+        },
+        "statement": {
+          "description": "The hypothesis in one testable sentence.",
+          "title": "Statement",
+          "type": "string"
+        }
+      },
+      "required": [
+        "statement",
+        "mechanism",
+        "claims",
+        "novel_because",
+        "falsifier",
+        "decisive_experiment"
+      ],
+      "title": "Articulation",
+      "type": "object"
+    },
+    "Ask": {
+      "additionalProperties": false,
+      "description": "A request back to the graph builder. This is the loop closing.",
+      "properties": {
+        "ask": {
+          "enum": [
+            "expand_node",
+            "resolve_link",
+            "test_gap",
+            "new_question"
+          ],
+          "title": "Ask",
+          "type": "string"
+        },
+        "depth": {
+          "default": "standard",
+          "enum": [
+            "quick",
+            "standard",
+            "deep",
+            "exhaustive"
+          ],
+          "title": "Depth",
+          "type": "string"
+        },
+        "for_hypothesis": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "For Hypothesis"
+        },
+        "graph_id": {
+          "title": "Graph Id",
+          "type": "string"
+        },
+        "reason": {
+          "default": "",
+          "title": "Reason",
+          "type": "string"
+        },
+        "target": {
+          "title": "Target",
+          "type": "string"
+        }
+      },
+      "required": [
+        "graph_id",
+        "ask",
+        "target"
+      ],
+      "title": "Ask",
+      "type": "object"
+    },
+    "Claim": {
+      "additionalProperties": false,
+      "description": "One atomic, separately checkable assertion inside a hypothesis.",
+      "properties": {
+        "cites": {
+          "description": "Ids from the evidence pack only (link, finding, paper, thing, or gap ids).",
+          "items": {
+            "type": "string"
+          },
+          "title": "Cites",
+          "type": "array"
+        },
+        "inferred": {
+          "default": false,
+          "description": "True when the graph does not state this and it is a step of reasoning.",
+          "title": "Inferred",
+          "type": "boolean"
+        },
+        "text": {
+          "description": "A single assertion, stated so it can be true or false on its own.",
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "title": "Claim",
+      "type": "object"
+    },
+    "Critique": {
+      "additionalProperties": false,
+      "description": "The adversarial pass. Its job is to break the hypothesis, not polish it.",
+      "properties": {
+        "alternative_explanation": {
+          "default": "",
+          "description": "A duller reading of the same evidence, if one exists.",
+          "title": "Alternative Explanation",
+          "type": "string"
+        },
+        "lens": {
+          "default": "",
+          "description": "Which angle this critic was told to attack from. Set by the harness, not the model.",
+          "title": "Lens",
+          "type": "string"
+        },
+        "per_claim": {
+          "items": {
+            "$ref": "#/$defs/CritiqueFinding"
+          },
+          "title": "Per Claim",
+          "type": "array"
+        },
+        "strongest_objection": {
+          "title": "Strongest Objection",
+          "type": "string"
+        },
+        "unsupported_leaps": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Unsupported Leaps",
+          "type": "array"
+        },
+        "verdict": {
+          "enum": [
+            "supported",
+            "partly_supported",
+            "unsupported",
+            "contradicted"
+          ],
+          "title": "Verdict",
+          "type": "string"
+        }
+      },
+      "required": [
+        "verdict",
+        "strongest_objection"
+      ],
+      "title": "Critique",
+      "type": "object"
+    },
+    "CritiqueFinding": {
+      "additionalProperties": false,
+      "properties": {
+        "cites": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Cites",
+          "type": "array"
+        },
+        "claim_index": {
+          "title": "Claim Index",
+          "type": "integer"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        },
+        "verdict": {
+          "enum": [
+            "supported",
+            "partly_supported",
+            "unsupported",
+            "contradicted"
+          ],
+          "title": "Verdict",
+          "type": "string"
+        }
+      },
+      "required": [
+        "claim_index",
+        "verdict",
+        "reason"
+      ],
+      "title": "CritiqueFinding",
+      "type": "object"
+    },
+    "GateResult": {
+      "additionalProperties": false,
+      "description": "The outcome of one verification gate.\n\n``summary`` is the one line that appears in the gate table, so it must say\nwhat happened rather than what was checked: \"L4,L2 share first author \u2014 1\ngroup\" is a result, \"checked independence\" is not.",
+      "properties": {
+        "halting": {
+          "default": false,
+          "description": "Whether a failure here stops the process. Set from params, not by the gate.",
+          "title": "Halting",
+          "type": "boolean"
+        },
+        "issues": {
+          "items": {
+            "$ref": "#/$defs/ValidationIssue"
+          },
+          "title": "Issues",
+          "type": "array"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "pass",
+            "warn",
+            "fail",
+            "skip"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "summary": {
+          "default": "",
+          "title": "Summary",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "status"
+      ],
+      "title": "GateResult",
+      "type": "object"
+    },
+    "Hypothesis": {
+      "additionalProperties": true,
+      "description": "One fully assembled, inspectable hypothesis.",
+      "properties": {
+        "articulation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Articulation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "asks": {
+          "items": {
+            "$ref": "#/$defs/Ask"
+          },
+          "title": "Asks",
+          "type": "array"
+        },
+        "caveats": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Caveats",
+          "type": "array"
+        },
+        "critiques": {
+          "items": {
+            "$ref": "#/$defs/Critique"
+          },
+          "title": "Critiques",
+          "type": "array"
+        },
+        "elo": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Set only when the tournament ran.",
+          "title": "Elo"
+        },
+        "evidence": {
+          "additionalProperties": true,
+          "title": "Evidence",
+          "type": "object"
+        },
+        "evolution_operator": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evolution Operator"
+        },
+        "evolved_from": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evolved From"
+        },
+        "hops": {
+          "title": "Hops",
+          "type": "integer"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "issues": {
+          "items": {
+            "$ref": "#/$defs/ValidationIssue"
+          },
+          "title": "Issues",
+          "type": "array"
+        },
+        "motif": {
+          "title": "Motif",
+          "type": "string"
+        },
+        "object": {
+          "title": "Object",
+          "type": "string"
+        },
+        "object_name": {
+          "title": "Object Name",
+          "type": "string"
+        },
+        "path": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Path",
+          "type": "array"
+        },
+        "provenance": {
+          "default": "",
+          "title": "Provenance",
+          "type": "string"
+        },
+        "rank_score": {
+          "default": 0.0,
+          "title": "Rank Score",
+          "type": "number"
+        },
+        "scores": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Scores",
+          "type": "object"
+        },
+        "subject": {
+          "title": "Subject",
+          "type": "string"
+        },
+        "subject_name": {
+          "title": "Subject Name",
+          "type": "string"
+        },
+        "tags": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Tags",
+          "type": "array"
+        },
+        "verdict": {
+          "anyOf": [
+            {
+              "enum": [
+                "supported",
+                "partly_supported",
+                "unsupported",
+                "contradicted"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Consensus across critics, per refute_threshold.",
+          "title": "Verdict"
+        },
+        "verification": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Verification"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The staged gate process. None means it never ran."
+        }
+      },
+      "required": [
+        "id",
+        "motif",
+        "subject",
+        "object",
+        "subject_name",
+        "object_name",
+        "hops"
+      ],
+      "title": "Hypothesis",
+      "type": "object"
+    },
+    "Provenance": {
+      "additionalProperties": true,
+      "description": "What the run was, so the hypothesis can be checked without the run.\n\nA hypothesis separated from what produced it is unfalsifiable in practice:\nsupport 0.5 from a cautious run and support 0.5 from an ambitious one are\nnot the same claim about the world, and the score alone cannot tell them\napart. So every document carries its own.",
+      "properties": {
+        "considered": {
+          "default": 0,
+          "description": "How many hypotheses this run assembled and ranked before choosing the one in this document. Selection is real work; a reader should know it happened.",
+          "title": "Considered",
+          "type": "integer"
+        },
+        "counts": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "description": "Run tallies: graph size, how many candidates were considered, model calls.",
+          "title": "Counts",
+          "type": "object"
+        },
+        "coverage": {
+          "additionalProperties": true,
+          "description": "What the input graph says about how thoroughly it searched. Read this before the scores: absence of evidence is not evidence of absence.",
+          "title": "Coverage",
+          "type": "object"
+        },
+        "generated_at": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "ISO 8601 timestamp of the run, if recorded.",
+          "title": "Generated At"
+        },
+        "graph_id": {
+          "description": "Id of the input knowledge graph this run read.",
+          "title": "Graph Id",
+          "type": "string"
+        },
+        "params": {
+          "additionalProperties": true,
+          "description": "The full resolved parameters. With the graph, these determine the output.",
+          "title": "Params",
+          "type": "object"
+        },
+        "question": {
+          "description": "The question the input graph was built to answer.",
+          "title": "Question",
+          "type": "string"
+        },
+        "round": {
+          "description": "The graph's round number, copied from the input.",
+          "title": "Round",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "graph_id",
+        "round",
+        "question"
+      ],
+      "title": "Provenance",
+      "type": "object"
+    },
+    "ValidationIssue": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "detail": {
+          "title": "Detail",
+          "type": "string"
+        },
+        "severity": {
+          "default": "warning",
+          "enum": [
+            "error",
+            "warning"
+          ],
+          "title": "Severity",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "detail"
+      ],
+      "title": "ValidationIssue",
+      "type": "object"
+    },
+    "Verification": {
+      "additionalProperties": false,
+      "description": "The full staged verification of one hypothesis.\n\nDistinct from ``Hypothesis.verdict``, which is only the adversarial\ncritics' consensus. This is the whole process: what ran, what it found, and\nwhere it stopped.",
+      "properties": {
+        "gates": {
+          "items": {
+            "$ref": "#/$defs/GateResult"
+          },
+          "title": "Gates",
+          "type": "array"
+        },
+        "halted_at": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Name of the gate that stopped the process, if one did.",
+          "title": "Halted At"
+        },
+        "verdict": {
+          "enum": [
+            "verified",
+            "qualified",
+            "unverified",
+            "rejected"
+          ],
+          "title": "Verdict",
+          "type": "string"
+        }
+      },
+      "required": [
+        "verdict"
+      ],
+      "title": "Verification",
+      "type": "object"
+    }
+  },
+  "$id": "https://labrador.dev/schemas/hypothesis.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "description": "OUTPUT of hyp_gen, written as hypothesis.json (schema version 2.0). ONE hypothesis, with the provenance needed to judge it. Prose contract: src/hyp_gen/OUTPUT_SCHEMA.md",
+  "properties": {
+    "asks": {
+      "description": "Requests back to the graph builder that would move this hypothesis.",
+      "items": {
+        "$ref": "#/$defs/Ask"
+      },
+      "title": "Asks",
+      "type": "array"
+    },
+    "hypothesis": {
+      "$ref": "#/$defs/Hypothesis",
+      "description": "The hypothesis itself: one claim, with its evidence."
+    },
+    "provenance": {
+      "$ref": "#/$defs/Provenance",
+      "description": "What produced this hypothesis."
+    },
+    "schema_version": {
+      "default": "2.0",
+      "description": "Version of the hypothesis.json contract this file was written against.",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "provenance",
+    "hypothesis"
+  ],
+  "title": "HypothesisDocument",
+  "type": "object"
+}

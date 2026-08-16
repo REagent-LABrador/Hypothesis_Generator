@@ -1,0 +1,1700 @@
+{
+  "$defs": {
+    "Articulation": {
+      "additionalProperties": false,
+      "description": "What the model is asked to produce from one structural candidate.",
+      "properties": {
+        "assumptions": {
+          "description": "What must be true but is not in the graph.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Assumptions",
+          "type": "array"
+        },
+        "claims": {
+          "description": "The hypothesis decomposed into checkable pieces.",
+          "items": {
+            "$ref": "#/$defs/Claim"
+          },
+          "title": "Claims",
+          "type": "array"
+        },
+        "decisive_experiment": {
+          "description": "The cheapest experiment that discriminates.",
+          "title": "Decisive Experiment",
+          "type": "string"
+        },
+        "falsifier": {
+          "description": "The single observation that would kill this.",
+          "title": "Falsifier",
+          "type": "string"
+        },
+        "mechanism": {
+          "description": "The proposed causal chain, in graph terms.",
+          "title": "Mechanism",
+          "type": "string"
+        },
+        "novel_because": {
+          "description": "What the graph does NOT already state.",
+          "title": "Novel Because",
+          "type": "string"
+        },
+        "predictions": {
+          "description": "Observations that should hold if this is true.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Predictions",
+          "type": "array"
+        },
+        "statement": {
+          "description": "The hypothesis in one testable sentence.",
+          "title": "Statement",
+          "type": "string"
+        }
+      },
+      "required": [
+        "statement",
+        "mechanism",
+        "claims",
+        "novel_because",
+        "falsifier",
+        "decisive_experiment"
+      ],
+      "title": "Articulation",
+      "type": "object"
+    },
+    "Ask": {
+      "additionalProperties": false,
+      "description": "A request back to the graph builder. This is the loop closing.",
+      "properties": {
+        "ask": {
+          "enum": [
+            "expand_node",
+            "resolve_link",
+            "test_gap",
+            "new_question"
+          ],
+          "title": "Ask",
+          "type": "string"
+        },
+        "depth": {
+          "default": "standard",
+          "enum": [
+            "quick",
+            "standard",
+            "deep",
+            "exhaustive"
+          ],
+          "title": "Depth",
+          "type": "string"
+        },
+        "for_hypothesis": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "For Hypothesis"
+        },
+        "graph_id": {
+          "title": "Graph Id",
+          "type": "string"
+        },
+        "reason": {
+          "default": "",
+          "title": "Reason",
+          "type": "string"
+        },
+        "target": {
+          "title": "Target",
+          "type": "string"
+        }
+      },
+      "required": [
+        "graph_id",
+        "ask",
+        "target"
+      ],
+      "title": "Ask",
+      "type": "object"
+    },
+    "Assumption": {
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "title": "Basis",
+          "type": "string"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "path": {
+          "title": "Path",
+          "type": "string"
+        },
+        "synthetic": {
+          "title": "Synthetic",
+          "type": "boolean"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Unit"
+        },
+        "value": {
+          "title": "Value"
+        }
+      },
+      "required": [
+        "id",
+        "path",
+        "value",
+        "unit",
+        "basis",
+        "synthetic"
+      ],
+      "title": "Assumption",
+      "type": "object"
+    },
+    "Card": {
+      "additionalProperties": false,
+      "properties": {
+        "headline": {
+          "title": "Headline",
+          "type": "string"
+        },
+        "highlights": {
+          "items": {
+            "$ref": "#/$defs/Highlight"
+          },
+          "title": "Highlights",
+          "type": "array"
+        },
+        "hops": {
+          "title": "Hops",
+          "type": "integer"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "metrics": {
+          "$ref": "#/$defs/Metrics"
+        },
+        "motif": {
+          "title": "Motif",
+          "type": "string"
+        },
+        "statement": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The articulated hypothesis, never clipped: it IS the claim.",
+          "title": "Statement"
+        },
+        "status": {
+          "$ref": "#/$defs/Status"
+        },
+        "trace": {
+          "title": "Trace",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "headline",
+        "trace",
+        "motif",
+        "hops",
+        "metrics",
+        "status",
+        "highlights"
+      ],
+      "title": "Card",
+      "type": "object"
+    },
+    "Claim": {
+      "additionalProperties": false,
+      "description": "One atomic, separately checkable assertion inside a hypothesis.",
+      "properties": {
+        "cites": {
+          "description": "Ids from the evidence pack only (link, finding, paper, thing, or gap ids).",
+          "items": {
+            "type": "string"
+          },
+          "title": "Cites",
+          "type": "array"
+        },
+        "inferred": {
+          "default": false,
+          "description": "True when the graph does not state this and it is a step of reasoning.",
+          "title": "Inferred",
+          "type": "boolean"
+        },
+        "text": {
+          "description": "A single assertion, stated so it can be true or false on its own.",
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "title": "Claim",
+      "type": "object"
+    },
+    "Counterfactual": {
+      "additionalProperties": false,
+      "properties": {
+        "change": {
+          "title": "Change",
+          "type": "string"
+        },
+        "meaning": {
+          "title": "Meaning",
+          "type": "string"
+        },
+        "result": {
+          "title": "Result",
+          "type": "string"
+        }
+      },
+      "required": [
+        "change",
+        "result",
+        "meaning"
+      ],
+      "title": "Counterfactual",
+      "type": "object"
+    },
+    "Critique": {
+      "additionalProperties": false,
+      "description": "The adversarial pass. Its job is to break the hypothesis, not polish it.",
+      "properties": {
+        "alternative_explanation": {
+          "default": "",
+          "description": "A duller reading of the same evidence, if one exists.",
+          "title": "Alternative Explanation",
+          "type": "string"
+        },
+        "lens": {
+          "default": "",
+          "description": "Which angle this critic was told to attack from. Set by the harness, not the model.",
+          "title": "Lens",
+          "type": "string"
+        },
+        "per_claim": {
+          "items": {
+            "$ref": "#/$defs/CritiqueFinding"
+          },
+          "title": "Per Claim",
+          "type": "array"
+        },
+        "strongest_objection": {
+          "title": "Strongest Objection",
+          "type": "string"
+        },
+        "unsupported_leaps": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Unsupported Leaps",
+          "type": "array"
+        },
+        "verdict": {
+          "enum": [
+            "supported",
+            "partly_supported",
+            "unsupported",
+            "contradicted"
+          ],
+          "title": "Verdict",
+          "type": "string"
+        }
+      },
+      "required": [
+        "verdict",
+        "strongest_objection"
+      ],
+      "title": "Critique",
+      "type": "object"
+    },
+    "CritiqueFinding": {
+      "additionalProperties": false,
+      "properties": {
+        "cites": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Cites",
+          "type": "array"
+        },
+        "claim_index": {
+          "title": "Claim Index",
+          "type": "integer"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        },
+        "verdict": {
+          "enum": [
+            "supported",
+            "partly_supported",
+            "unsupported",
+            "contradicted"
+          ],
+          "title": "Verdict",
+          "type": "string"
+        }
+      },
+      "required": [
+        "claim_index",
+        "verdict",
+        "reason"
+      ],
+      "title": "CritiqueFinding",
+      "type": "object"
+    },
+    "Evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "claim": {
+          "title": "Claim",
+          "type": "string"
+        },
+        "grade": {
+          "enum": [
+            "HIGH",
+            "MODERATE",
+            "LOW",
+            "UNSUPPORTED"
+          ],
+          "title": "Grade",
+          "type": "string"
+        },
+        "id": {
+          "description": "evidence.<finding id> \u2014 the document's own id.",
+          "title": "Id",
+          "type": "string"
+        },
+        "locator": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Locator"
+        },
+        "quote": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Verbatim from the document, or null.",
+          "title": "Quote"
+        },
+        "source_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Source Id"
+        },
+        "source_type": {
+          "title": "Source Type",
+          "type": "string"
+        },
+        "source_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Source Url"
+        },
+        "synthetic": {
+          "title": "Synthetic",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "claim",
+        "source_type",
+        "source_id",
+        "source_url",
+        "locator",
+        "quote",
+        "grade",
+        "synthetic"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "GateResult": {
+      "additionalProperties": false,
+      "description": "The outcome of one verification gate.\n\n``summary`` is the one line that appears in the gate table, so it must say\nwhat happened rather than what was checked: \"L4,L2 share first author \u2014 1\ngroup\" is a result, \"checked independence\" is not.",
+      "properties": {
+        "halting": {
+          "default": false,
+          "description": "Whether a failure here stops the process. Set from params, not by the gate.",
+          "title": "Halting",
+          "type": "boolean"
+        },
+        "issues": {
+          "items": {
+            "$ref": "#/$defs/ValidationIssue"
+          },
+          "title": "Issues",
+          "type": "array"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "pass",
+            "warn",
+            "fail",
+            "skip"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "summary": {
+          "default": "",
+          "title": "Summary",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "status"
+      ],
+      "title": "GateResult",
+      "type": "object"
+    },
+    "HeadlessError": {
+      "additionalProperties": false,
+      "properties": {
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "reason_code": {
+          "title": "Reason Code",
+          "type": "string"
+        }
+      },
+      "required": [
+        "reason_code",
+        "message"
+      ],
+      "title": "HeadlessError",
+      "type": "object"
+    },
+    "Headline": {
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "description": "Where the conclusion comes from.",
+          "items": {
+            "enum": [
+              "OBSERVED",
+              "INFERRED",
+              "MODELED",
+              "SYNTHETIC"
+            ],
+            "type": "string"
+          },
+          "title": "Basis",
+          "type": "array"
+        },
+        "plain_language": {
+          "description": "One-sentence human explanation.",
+          "title": "Plain Language",
+          "type": "string"
+        },
+        "result": {
+          "description": "Stable machine-readable result.",
+          "title": "Result",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "SUPPORTED",
+            "QUALIFIED",
+            "INCONCLUSIVE",
+            "FAILED",
+            "NOT_APPLICABLE"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "title": {
+          "description": "Short UI title.",
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "result",
+        "plain_language",
+        "status",
+        "basis"
+      ],
+      "title": "Headline",
+      "type": "object"
+    },
+    "Highlight": {
+      "additionalProperties": false,
+      "description": "One punchy line, plus the ids that make it checkable.",
+      "properties": {
+        "kind": {
+          "enum": [
+            "failure",
+            "contradiction",
+            "caution",
+            "novelty",
+            "support"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "refs": {
+          "description": "Link/finding/gap ids this line was assembled from.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Refs",
+          "type": "array"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "text"
+      ],
+      "title": "Highlight",
+      "type": "object"
+    },
+    "Hypothesis": {
+      "additionalProperties": true,
+      "description": "One fully assembled, inspectable hypothesis.",
+      "properties": {
+        "articulation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Articulation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "asks": {
+          "items": {
+            "$ref": "#/$defs/Ask"
+          },
+          "title": "Asks",
+          "type": "array"
+        },
+        "caveats": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Caveats",
+          "type": "array"
+        },
+        "critiques": {
+          "items": {
+            "$ref": "#/$defs/Critique"
+          },
+          "title": "Critiques",
+          "type": "array"
+        },
+        "elo": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Set only when the tournament ran.",
+          "title": "Elo"
+        },
+        "evidence": {
+          "additionalProperties": true,
+          "title": "Evidence",
+          "type": "object"
+        },
+        "evolution_operator": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evolution Operator"
+        },
+        "evolved_from": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evolved From"
+        },
+        "hops": {
+          "title": "Hops",
+          "type": "integer"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "issues": {
+          "items": {
+            "$ref": "#/$defs/ValidationIssue"
+          },
+          "title": "Issues",
+          "type": "array"
+        },
+        "motif": {
+          "title": "Motif",
+          "type": "string"
+        },
+        "object": {
+          "title": "Object",
+          "type": "string"
+        },
+        "object_name": {
+          "title": "Object Name",
+          "type": "string"
+        },
+        "path": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Path",
+          "type": "array"
+        },
+        "provenance": {
+          "default": "",
+          "title": "Provenance",
+          "type": "string"
+        },
+        "rank_score": {
+          "default": 0.0,
+          "title": "Rank Score",
+          "type": "number"
+        },
+        "scores": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Scores",
+          "type": "object"
+        },
+        "subject": {
+          "title": "Subject",
+          "type": "string"
+        },
+        "subject_name": {
+          "title": "Subject Name",
+          "type": "string"
+        },
+        "tags": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Tags",
+          "type": "array"
+        },
+        "verdict": {
+          "anyOf": [
+            {
+              "enum": [
+                "supported",
+                "partly_supported",
+                "unsupported",
+                "contradicted"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Consensus across critics, per refute_threshold.",
+          "title": "Verdict"
+        },
+        "verification": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Verification"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The staged gate process. None means it never ran."
+        }
+      },
+      "required": [
+        "id",
+        "motif",
+        "subject",
+        "object",
+        "subject_name",
+        "object_name",
+        "hops"
+      ],
+      "title": "Hypothesis",
+      "type": "object"
+    },
+    "HypothesisDocument": {
+      "additionalProperties": true,
+      "description": "THE OUTPUT. One run over one knowledge graph produces exactly one of these.\n\nWritten as ``hypothesis.json``. This is a single hypothesis -- the one that\nranked first -- not a slate. A run still enumerates, scores and ranks many\ncandidates internally, because that is how it knows which one is best, but\nonly the winner crosses this boundary.\n\nThe document is self-contained on purpose: ``provenance`` says what it was\nrun on and with what stance, ``hypothesis`` is the claim with its evidence\nand its verification, and ``asks`` names the requests that would move it.\nNothing here needs the graph to be re-read to be understood.\n\nReading order for a consumer: ``schema_version``, then\n``provenance.coverage``, then ``hypothesis.verification.verdict``, then the\nclaim itself. A hypothesis carrying an error-level issue is not a finding.",
+      "properties": {
+        "asks": {
+          "description": "Requests back to the graph builder that would move this hypothesis.",
+          "items": {
+            "$ref": "#/$defs/Ask"
+          },
+          "title": "Asks",
+          "type": "array"
+        },
+        "hypothesis": {
+          "$ref": "#/$defs/Hypothesis",
+          "description": "The hypothesis itself: one claim, with its evidence."
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance",
+          "description": "What produced this hypothesis."
+        },
+        "schema_version": {
+          "default": "2.0",
+          "description": "Version of the hypothesis.json contract this file was written against.",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "provenance",
+        "hypothesis"
+      ],
+      "title": "HypothesisDocument",
+      "type": "object"
+    },
+    "Interpretability": {
+      "additionalProperties": false,
+      "description": "The shared contract. Every field is required; an empty array is legal\nonly when genuinely not applicable, and a limitation must say why.",
+      "properties": {
+        "assumptions": {
+          "items": {
+            "$ref": "#/$defs/Assumption"
+          },
+          "title": "Assumptions",
+          "type": "array"
+        },
+        "counterfactuals": {
+          "items": {
+            "$ref": "#/$defs/Counterfactual"
+          },
+          "title": "Counterfactuals",
+          "type": "array"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "extensions": {
+          "additionalProperties": true,
+          "description": "Module-specific structured data. The shared UI must not require it.",
+          "title": "Extensions",
+          "type": "object"
+        },
+        "headline": {
+          "$ref": "#/$defs/Headline"
+        },
+        "limitations": {
+          "items": {
+            "$ref": "#/$defs/Limitation"
+          },
+          "title": "Limitations",
+          "type": "array"
+        },
+        "lineage": {
+          "items": {
+            "$ref": "#/$defs/Lineage"
+          },
+          "title": "Lineage",
+          "type": "array"
+        },
+        "metrics": {
+          "items": {
+            "$ref": "#/$defs/Metric"
+          },
+          "title": "Metrics",
+          "type": "array"
+        },
+        "schema_version": {
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "steps": {
+          "items": {
+            "$ref": "#/$defs/Step"
+          },
+          "title": "Steps",
+          "type": "array"
+        },
+        "uncertainty": {
+          "$ref": "#/$defs/Uncertainty"
+        }
+      },
+      "required": [
+        "headline",
+        "metrics",
+        "steps",
+        "evidence",
+        "assumptions",
+        "uncertainty",
+        "limitations",
+        "counterfactuals",
+        "lineage",
+        "extensions"
+      ],
+      "title": "Interpretability",
+      "type": "object"
+    },
+    "Interval": {
+      "additionalProperties": false,
+      "properties": {
+        "central": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Central"
+        },
+        "confidence_level": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Confidence Level"
+        },
+        "high": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "High"
+        },
+        "low": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Low"
+        },
+        "metric_id": {
+          "title": "Metric Id",
+          "type": "string"
+        },
+        "unit": {
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "metric_id",
+        "low",
+        "central",
+        "high",
+        "unit",
+        "confidence_level"
+      ],
+      "title": "Interval",
+      "type": "object"
+    },
+    "Limitation": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "description": "STABLE_MACHINE_CODE.",
+          "title": "Code",
+          "type": "string"
+        },
+        "field_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Field Path"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "severity": {
+          "enum": [
+            "INFO",
+            "WARNING",
+            "ERROR"
+          ],
+          "title": "Severity",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "severity",
+        "message",
+        "field_path"
+      ],
+      "title": "Limitation",
+      "type": "object"
+    },
+    "Lineage": {
+      "additionalProperties": false,
+      "properties": {
+        "input_paths": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Input Paths",
+          "type": "array"
+        },
+        "output_path": {
+          "title": "Output Path",
+          "type": "string"
+        },
+        "transformation": {
+          "title": "Transformation",
+          "type": "string"
+        }
+      },
+      "required": [
+        "output_path",
+        "input_paths",
+        "transformation"
+      ],
+      "title": "Lineage",
+      "type": "object"
+    },
+    "Metric": {
+      "additionalProperties": false,
+      "properties": {
+        "assumption_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Assumption Ids",
+          "type": "array"
+        },
+        "direction": {
+          "enum": [
+            "positive",
+            "negative",
+            "neutral",
+            "mixed",
+            "unknown"
+          ],
+          "title": "Direction",
+          "type": "string"
+        },
+        "display": {
+          "description": "Short, plain-text rendering. No HTML.",
+          "title": "Display",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "id": {
+          "description": "Stable machine id, metric.<name>. Never positional.",
+          "title": "Id",
+          "type": "string"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "meaning": {
+          "description": "Why this number matters. Heuristics say so.",
+          "title": "Meaning",
+          "type": "string"
+        },
+        "unit": {
+          "title": "Unit",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Null when genuinely unknown, never 0.",
+          "title": "Value"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "value",
+        "unit",
+        "display",
+        "meaning",
+        "direction",
+        "evidence_ids",
+        "assumption_ids"
+      ],
+      "title": "Metric",
+      "type": "object"
+    },
+    "Metrics": {
+      "additionalProperties": false,
+      "properties": {
+        "novelty": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Novelty"
+        },
+        "rank": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Orders cards on a page; it does not grade the science.",
+          "title": "Rank"
+        },
+        "support": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Support"
+        },
+        "testability": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Testability"
+        }
+      },
+      "title": "Metrics",
+      "type": "object"
+    },
+    "Provenance": {
+      "additionalProperties": true,
+      "description": "What the run was, so the hypothesis can be checked without the run.\n\nA hypothesis separated from what produced it is unfalsifiable in practice:\nsupport 0.5 from a cautious run and support 0.5 from an ambitious one are\nnot the same claim about the world, and the score alone cannot tell them\napart. So every document carries its own.",
+      "properties": {
+        "considered": {
+          "default": 0,
+          "description": "How many hypotheses this run assembled and ranked before choosing the one in this document. Selection is real work; a reader should know it happened.",
+          "title": "Considered",
+          "type": "integer"
+        },
+        "counts": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "description": "Run tallies: graph size, how many candidates were considered, model calls.",
+          "title": "Counts",
+          "type": "object"
+        },
+        "coverage": {
+          "additionalProperties": true,
+          "description": "What the input graph says about how thoroughly it searched. Read this before the scores: absence of evidence is not evidence of absence.",
+          "title": "Coverage",
+          "type": "object"
+        },
+        "generated_at": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "ISO 8601 timestamp of the run, if recorded.",
+          "title": "Generated At"
+        },
+        "graph_id": {
+          "description": "Id of the input knowledge graph this run read.",
+          "title": "Graph Id",
+          "type": "string"
+        },
+        "params": {
+          "additionalProperties": true,
+          "description": "The full resolved parameters. With the graph, these determine the output.",
+          "title": "Params",
+          "type": "object"
+        },
+        "question": {
+          "description": "The question the input graph was built to answer.",
+          "title": "Question",
+          "type": "string"
+        },
+        "round": {
+          "description": "The graph's round number, copied from the input.",
+          "title": "Round",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "graph_id",
+        "round",
+        "question"
+      ],
+      "title": "Provenance",
+      "type": "object"
+    },
+    "Status": {
+      "additionalProperties": false,
+      "properties": {
+        "critics": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Critics"
+        },
+        "flags": {
+          "description": "Must-not-miss states: rejection badges, a halted gate run.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Flags",
+          "type": "array"
+        },
+        "verification": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Verification"
+        }
+      },
+      "title": "Status",
+      "type": "object"
+    },
+    "Step": {
+      "additionalProperties": false,
+      "properties": {
+        "assumption_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Assumption Ids",
+          "type": "array"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "formula": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Formula"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "inputs": {
+          "items": {
+            "$ref": "#/$defs/StepInput"
+          },
+          "title": "Inputs",
+          "type": "array"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "method": {
+          "title": "Method",
+          "type": "string"
+        },
+        "result": {
+          "$ref": "#/$defs/StepResult"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "method",
+        "formula",
+        "inputs",
+        "result",
+        "evidence_ids",
+        "assumption_ids"
+      ],
+      "title": "Step",
+      "type": "object"
+    },
+    "StepInput": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "description": "Where in the document or params this value lives.",
+          "title": "Path",
+          "type": "string"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Unit"
+        },
+        "value": {
+          "title": "Value"
+        }
+      },
+      "required": [
+        "path",
+        "value",
+        "unit"
+      ],
+      "title": "StepInput",
+      "type": "object"
+    },
+    "StepResult": {
+      "additionalProperties": false,
+      "properties": {
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Unit"
+        },
+        "value": {
+          "title": "Value"
+        }
+      },
+      "required": [
+        "value",
+        "unit"
+      ],
+      "title": "StepResult",
+      "type": "object"
+    },
+    "Uncertainty": {
+      "additionalProperties": false,
+      "properties": {
+        "draws": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Draws"
+        },
+        "intervals": {
+          "items": {
+            "$ref": "#/$defs/Interval"
+          },
+          "title": "Intervals",
+          "type": "array"
+        },
+        "limitations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Limitations",
+          "type": "array"
+        },
+        "method": {
+          "title": "Method",
+          "type": "string"
+        },
+        "seed": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Seed"
+        }
+      },
+      "required": [
+        "method",
+        "intervals",
+        "seed",
+        "draws",
+        "limitations"
+      ],
+      "title": "Uncertainty",
+      "type": "object"
+    },
+    "ValidationIssue": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "detail": {
+          "title": "Detail",
+          "type": "string"
+        },
+        "severity": {
+          "default": "warning",
+          "enum": [
+            "error",
+            "warning"
+          ],
+          "title": "Severity",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "detail"
+      ],
+      "title": "ValidationIssue",
+      "type": "object"
+    },
+    "Verification": {
+      "additionalProperties": false,
+      "description": "The full staged verification of one hypothesis.\n\nDistinct from ``Hypothesis.verdict``, which is only the adversarial\ncritics' consensus. This is the whole process: what ran, what it found, and\nwhere it stopped.",
+      "properties": {
+        "gates": {
+          "items": {
+            "$ref": "#/$defs/GateResult"
+          },
+          "title": "Gates",
+          "type": "array"
+        },
+        "halted_at": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Name of the gate that stopped the process, if one did.",
+          "title": "Halted At"
+        },
+        "verdict": {
+          "enum": [
+            "verified",
+            "qualified",
+            "unverified",
+            "rejected"
+          ],
+          "title": "Verdict",
+          "type": "string"
+        }
+      },
+      "required": [
+        "verdict"
+      ],
+      "title": "Verification",
+      "type": "object"
+    },
+    "WebPayload": {
+      "additionalProperties": false,
+      "properties": {
+        "coverage": {
+          "additionalProperties": true,
+          "title": "Coverage",
+          "type": "object"
+        },
+        "generated_at": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Generated At"
+        },
+        "graph_id": {
+          "title": "Graph Id",
+          "type": "string"
+        },
+        "hypotheses": {
+          "items": {
+            "$ref": "#/$defs/Card"
+          },
+          "title": "Hypotheses",
+          "type": "array"
+        },
+        "interpretability": {
+          "$ref": "#/$defs/Interpretability",
+          "description": "The shared LABrador interpretability contract for the bundle's winning hypothesis. Required: a payload without it does not validate. See adapters/interpretability.py and schemas/interpretability.schema.json."
+        },
+        "question": {
+          "title": "Question",
+          "type": "string"
+        },
+        "round": {
+          "title": "Round",
+          "type": "integer"
+        },
+        "schema_version": {
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "warnings": {
+          "description": "Bundle-level facts every card must be read next to.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "graph_id",
+        "round",
+        "question",
+        "coverage",
+        "hypotheses",
+        "interpretability"
+      ],
+      "title": "WebPayload",
+      "type": "object"
+    }
+  },
+  "$id": "https://labrador.dev/schemas/headless-output.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "OUTPUT of hypgen-run. COMPLETE carries the focused hypothesis, cards, and ROI request; CANNOT_COMPLETE carries a stable terminal error.",
+  "properties": {
+    "cards": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/WebPayload"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "error": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/HeadlessError"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "execution_mode": {
+      "enum": [
+        "LIVE",
+        "REPLAY"
+      ],
+      "title": "Execution Mode",
+      "type": "string"
+    },
+    "hypothesis": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/HypothesisDocument"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "output_origin": {
+      "enum": [
+        "LIVE_PROVIDER",
+        "DETERMINISTIC_REPLAY"
+      ],
+      "title": "Output Origin",
+      "type": "string"
+    },
+    "roi_request": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Roi Request"
+    },
+    "status": {
+      "enum": [
+        "COMPLETE",
+        "CANNOT_COMPLETE"
+      ],
+      "title": "Status",
+      "type": "string"
+    }
+  },
+  "required": [
+    "status",
+    "execution_mode",
+    "output_origin"
+  ],
+  "title": "HeadlessResponse",
+  "type": "object"
+}

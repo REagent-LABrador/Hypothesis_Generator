@@ -118,6 +118,13 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--graph", type=Path, help="input knowledge graph JSON (see schemas/knowledge-graph.schema.json)")
     parser.add_argument("--profile", default="default", choices=sorted(PROFILES))
     parser.add_argument(
+        "--focus-thing-id",
+        help=(
+            "only consider hypotheses whose evidence contains this graph thing id; "
+            "one focused invocation still emits exactly one hypothesis"
+        ),
+    )
+    parser.add_argument(
         "--craziness",
         type=float,
         metavar="0.0-1.0",
@@ -153,6 +160,10 @@ def main(argv: list[str] | None = None) -> int:
         parser.error("--graph is required")
 
     graph = KnowledgeGraph.load(args.graph)
+    if args.focus_thing_id and args.focus_thing_id not in {thing.id for thing in graph.things}:
+        parser.error(
+            f"--focus-thing-id {args.focus_thing_id!r} is not present in graph {graph.graph_id}"
+        )
     overrides = _overrides(args.set)
     if args.params:
         if args.craziness is not None:
@@ -190,7 +201,12 @@ def main(argv: list[str] | None = None) -> int:
             )
             return 2
 
-    generator = Generator(graph=graph, params=params, judge=judge)
+    generator = Generator(
+        graph=graph,
+        params=params,
+        judge=judge,
+        focus_thing_id=args.focus_thing_id,
+    )
 
     if args.dry_run:
         _dry_run(generator)

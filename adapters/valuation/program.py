@@ -514,6 +514,7 @@ def _indication(
     *,
     launch_year: int,
     role: str,
+    explicit_name: str | None = None,
 ) -> dict[str, Any]:
     """One `IndicationInput`: identity from the graph, everything else empty.
 
@@ -524,6 +525,19 @@ def _indication(
     """
 
     accessed = _accessed_at(record)
+    indication_name = explicit_name or hypothesis.object_name
+    evidence_note = (
+        f"Hypothesis {hypothesis.id} ({hypothesis.motif}) supplies mechanism evidence only; "
+        "it does not propose or identify the economic indication. The population label "
+        f"{indication_name!r} is copied verbatim from valuation_frame.target_population. "
+        "A process node is never relabelled as a disease."
+        if explicit_name is not None
+        else (
+            f"{role} indication proposed by hypothesis {hypothesis.id} "
+            f"({hypothesis.motif}); scores {hypothesis.scores}. The graph names the disease; "
+            "it says nothing about population, access or price."
+        )
+    )
     evidence: dict[str, Any] = {
         f"hypothesis:{hypothesis.id}": {
             **unsupported(""),
@@ -532,11 +546,7 @@ def _indication(
             "grade": "LOW",
             "accessed_at": accessed,
             "citation": hypothesis.provenance,
-            "notes": (
-                f"{role} indication proposed by hypothesis {hypothesis.id} "
-                f"({hypothesis.motif}); scores {hypothesis.scores}. The graph names the "
-                "disease; it says nothing about population, access or price."
-            ),
+            "notes": evidence_note,
         }
     }
     for link_id, link in (hypothesis.evidence.get("links") or {}).items():
@@ -572,8 +582,8 @@ def _indication(
     _assert_namespaced(evidence)
 
     return {
-        "indication_id": f"{_slug(hypothesis.object_name)}-{_slug(role)}",
-        "name": hypothesis.object_name,
+        "indication_id": f"{_slug(indication_name)}-{_slug(role)}",
+        "name": indication_name,
         "therapeutic_area": frame.therapeutic_area,
         "target_population": frame.target_population,
         "line_of_therapy": frame.line_of_therapy,
@@ -629,6 +639,11 @@ def _indication(
             "hypothesis_id": hypothesis.id,
             "motif": hypothesis.motif,
             "role": role,
+            "indication_identity_source": (
+                "valuation_frame.target_population"
+                if explicit_name is not None
+                else "hypothesis.object"
+            ),
             "hops": hypothesis.hops,
             "scores": hypothesis.scores,
             "rank_score": hypothesis.rank_score,
@@ -654,6 +669,98 @@ def _indication(
             ],
         },
     }
+
+
+def focused_program_input(
+    hypothesis: Hypothesis,
+    record: Bundle,
+    frame: ProgramFrame,
+) -> dict[str, Any]:
+    """Build one ROI program when focus is a biomarker/process, not a disease.
+
+    The economic identity comes only from the explicit analyst frame. The
+    hypothesis contributes its stable id, mechanism, evidence, and open asks;
+    it never turns its process/object node into an indication.
+    """
+
+    missing: list[str] = []
+    if not frame.target or not frame.target.strip():
+        missing.append("target")
+    if frame.modality is None:
+        missing.append("modality")
+    if not frame.target_population.strip() or frame.target_population.casefold() == "unspecified":
+        missing.append("target_population")
+    if (
+        not frame.therapeutic_area.strip()
+        or frame.therapeutic_area.casefold() == "unspecified"
+    ):
+        missing.append("therapeutic_area")
+    if hypothesis.blocked:
+        codes = ", ".join(
+            issue.code for issue in hypothesis.issues if issue.severity == "error"
+        )
+        raise ValueError(f"canonical focused hypothesis is blocked: {codes}")
+    if missing:
+        raise ValueError(
+            "valuation_frame is incomplete for a focused ROI program: "
+            + ", ".join(missing)
+        )
+
+    mechanism = None
+    if hypothesis.articulation is not None:
+        mechanism = (
+            hypothesis.articulation.mechanism.strip()
+            or hypothesis.articulation.statement.strip()
+            or None
+        )
+    if mechanism is None:
+        path = [
+            (
+                f"{step.get('from_name') or step.get('from')} "
+                f"--{step.get('how') or 'related_to'}--> "
+                f"{step.get('to_name') or step.get('to')}"
+            )
+            for step in hypothesis.path
+        ]
+        mechanism = "; ".join(path) or (
+            f"{hypothesis.subject_name} --focused_hypothesis--> "
+            f"{hypothesis.object_name}"
+        )
+
+    program = program_input([hypothesis], record, frame)
+    program.update(
+        {
+            "program_id": f"{record.graph_id}-{_slug(hypothesis.id)}",
+            "program_name": f"{frame.target} in {frame.target_population}",
+            "molecule_identifier": f"frame-target:{frame.target}:{frame.modality}",
+            "initial_indication": _indication(
+                hypothesis,
+                record,
+                frame,
+                launch_year=frame.launch_year,
+                role="initial",
+                explicit_name=frame.target_population,
+            ),
+        }
+    )
+    program["assumptions"].update(
+        {
+            "focused_hypothesis_id": hypothesis.id,
+            "focused_hypothesis_mechanism": mechanism,
+            "economic_indication_source": "valuation_frame.target_population",
+            "program_name_source": "valuation_frame.target + valuation_frame.target_population",
+            "program_name_limitation": (
+                "The frame target is an analyst-supplied target/program placeholder, not a "
+                "discovered or nominated molecule."
+            ),
+            "molecule_identifier_source": "valuation_frame.target + valuation_frame.modality",
+            "molecule_identifier_limitation": (
+                "Target/program placeholder only; the valuation frame names a target and modality, "
+                "not a discovered or nominated molecule."
+            ),
+        }
+    )
+    return program
 
 
 def program_input(

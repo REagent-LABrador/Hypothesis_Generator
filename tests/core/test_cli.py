@@ -108,3 +108,28 @@ def test_the_core_has_no_adapter_flags(capsys) -> None:
     with pytest.raises(SystemExit):
         main(["--graph", str(GRAPH), "--dry-run", "--report-mode", "full"])
     assert "unrecognized arguments" in capsys.readouterr().err
+
+
+def test_focus_is_recorded_and_the_winner_contains_it(tmp_path: Path) -> None:
+    assert main([
+        "--graph", str(GRAPH), "--profile", "valuation", "--focus-thing-id", "t8",
+        "--dry-run", "--out", str(tmp_path),
+    ]) == 0
+    document = json.loads((tmp_path / FILENAME).read_text())
+    assert document["provenance"]["params"]["focus_thing_id"] == "t8"
+    hypothesis = document["hypothesis"]
+    assert "t8" in {
+        hypothesis["subject"],
+        hypothesis["object"],
+        *(step["from"] for step in hypothesis["path"]),
+        *(step["to"] for step in hypothesis["path"]),
+    }
+
+
+def test_unknown_focus_is_rejected_before_running(tmp_path: Path, capsys) -> None:
+    with pytest.raises(SystemExit):
+        main([
+            "--graph", str(GRAPH), "--focus-thing-id", "not-a-node",
+            "--dry-run", "--out", str(tmp_path),
+        ])
+    assert "not present" in capsys.readouterr().err

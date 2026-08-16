@@ -201,3 +201,10 @@ def test_condition_splits_stay_in_the_framing_scope(index: GraphIndex) -> None:
     )
     assert enumerate_candidates(index, in_scope)
     assert enumerate_candidates(index, out_of_scope) == []
+
+
+def test_focus_is_applied_before_the_global_candidate_cap(index: GraphIndex) -> None:
+    params = Params(traversal=TraversalParams(max_candidates=1))
+    focused = enumerate_candidates(index, params, focus_thing_id="t8")
+    assert focused
+    assert all("t8" in candidate.node_ids() for candidate in focused)

@@ -52,6 +52,18 @@ python3 -m venv .venv && .venv/bin/pip install -e '.[dev]'
 .venv/bin/python -m pytest
 ```
 
+For LABrador orchestration, one file-in/file-out command performs a focused
+provider-backed run and emits the canonical hypothesis, cards, and complete ROI
+request together:
+
+```bash
+.venv/bin/hypgen-run --mode live --input request.json --output result.json
+```
+
+Use `--mode replay` for a deterministic local run over the supplied graph. It
+never calls a provider and labels the result `DETERMINISTIC_REPLAY`; live mode
+never falls back to it. See [`adapters/headless/SCHEMA.md`](adapters/headless/SCHEMA.md).
+
 `python -m hyp_gen` is the same entry point if you would rather not rely on the
 console script.
 

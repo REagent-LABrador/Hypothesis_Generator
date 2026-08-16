@@ -385,8 +385,17 @@ _GENERATORS = {
 }
 
 
-def enumerate_candidates(index: GraphIndex, params: Params) -> list[Candidate]:
-    """Every structural hypothesis the params allow, deduped and capped."""
+def enumerate_candidates(
+    index: GraphIndex,
+    params: Params,
+    focus_thing_id: str | None = None,
+) -> list[Candidate]:
+    """Every allowed structural hypothesis, optionally bound to one graph node.
+
+    The focus filter is applied before the global candidate cap. Filtering a
+    completed slate would let an unrelated dense neighbourhood consume the cap
+    and incorrectly report that the requested focus had no candidates.
+    """
     seen: set[tuple] = set()
     out: list[Candidate] = []
     for motif in params.motifs.enabled:
@@ -394,9 +403,13 @@ def enumerate_candidates(index: GraphIndex, params: Params) -> list[Candidate]:
         if generator is None:
             continue
         for candidate in generator(index, params):
+            if focus_thing_id and focus_thing_id not in candidate.node_ids():
+                continue
             key = candidate.key()
             if key in seen:
                 continue
             seen.add(key)
             out.append(candidate)
-    return out[: params.traversal.max_candidates]
+            if len(out) >= params.traversal.max_candidates:
+                return out
+    return out

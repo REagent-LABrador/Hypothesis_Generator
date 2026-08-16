@@ -100,6 +100,7 @@ class Generator:
     graph: KnowledgeGraph
     params: Params
     judge: Judge | None = None
+    focus_thing_id: str | None = None
     index: GraphIndex = field(init=False)
 
     slow_enumeration: float | None = field(default=None, init=False)
@@ -117,12 +118,19 @@ class Generator:
 
     def __post_init__(self) -> None:
         self.index = GraphIndex(self.graph)
+        if self.focus_thing_id and self.focus_thing_id not in self.index.things:
+            raise ValueError(
+                f"focus thing {self.focus_thing_id!r} does not exist in graph "
+                f"{self.graph.graph_id}"
+            )
 
     # -- deterministic half -------------------------------------------------
 
     def shortlist(self) -> list[tuple[Candidate, Scores]]:
         started = time.monotonic()
-        candidates = enumerate_candidates(self.index, self.params)
+        candidates = enumerate_candidates(
+            self.index, self.params, focus_thing_id=self.focus_thing_id
+        )
         elapsed = time.monotonic() - started
         if elapsed > self.params.budget.max_enumeration_seconds:
             # Not fatal -- what enumeration produced is still valid. Recorded
@@ -469,13 +477,18 @@ class Generator:
             hypotheses.sort(key=lambda h: (h.elo is None, -(h.elo or 0)))
 
         loop_asks = asks_mod.dedupe([a for h in hypotheses for a in h.asks])
+        resolved_params = self.params.model_dump(mode="json")
+        # Focus is part of the run identity, not a scoring knob. Recording it
+        # in the open params ledger preserves reproducibility without changing
+        # the hypothesis wire schema.
+        resolved_params["focus_thing_id"] = self.focus_thing_id
         return RunResult(
             provenance=Provenance(
                 graph_id=self.graph.graph_id,
                 round=self.graph.round,
                 question=self.graph.question,
                 generated_at=self.graph.generated_at,
-                params=self.params.model_dump(mode="json"),
+                params=resolved_params,
                 coverage=self.graph.coverage.model_dump(mode="json"),
                 counts={
                     "things": len(self.graph.things),
